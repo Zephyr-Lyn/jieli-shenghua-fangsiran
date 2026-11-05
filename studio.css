@@ -1,0 +1,356 @@
+/* The dye atelier: samples at the edge, the cloth in the centre, tools nearby. */
+.studio {
+  --table: #f1f0e8;
+  --paper: #fafaf5;
+  --cloth: #eeefe5;
+  --ink: #183f58;
+  --muted: #627a82;
+  --blue: #245576;
+  --line: #cbd2cc;
+  --studio-tools: 300px;
+  color: var(--ink);
+  background: var(--table);
+  min-height: 100svh;
+}
+.studio .masthead {
+  max-width: 1600px;
+  padding: 26px 48px 15px;
+  gap: 22px;
+}
+.studio .wordmark { font-size: 21px; letter-spacing: .06em; font-weight: 600; }
+.studio .brand-icon { color: var(--ink); font-size: 31px; }
+.studio .brand-icon svg { width: 31px; height: 31px; display: block; }
+.studio .prototype-label { border-color: #cbd2cc; padding-left: 22px; font-size: 12px; letter-spacing: .035em; }
+.studio .reset-button { font-size: 12px; padding: 8px 0; color: #536d77; border-color: #a8babd; }
+.studio main {
+  max-width: 1600px;
+  padding: 0 48px;
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  column-gap: 32px;
+}
+.studio .intro { grid-column: 1 / -1; min-height: 76px; padding: 10px 0 20px; display: flex; align-items: center; }
+.studio .intro h1 { font-size: 26px; line-height: 1.55; letter-spacing: .015em; font-weight: 500; }
+.studio .intro-note { display: none; }
+
+/* The real algorithm samples function as a quiet fabric selvedge. */
+.studio .technique-picker { grid-column: 1; grid-row: 2; margin: 0; padding-top: 17px; min-width: 0; }
+.studio .picker-heading { display: block; margin: 0 0 16px; padding-left: 11px; }
+.studio .picker-heading h2 { margin: 0; font-size: 12px; font-weight: 500; letter-spacing: .08em; color: #526d78; }
+.studio .picker-heading > span { display: none; }
+.studio .technique-shelf { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+.studio .technique-choice { position: relative; display: flex; flex-direction: column; align-items: center; padding: 4px 10px 8px; min-width: 0; border: 0; border-radius: 0; background: transparent; color: #657b82; text-align: center; scroll-snap-align: start; }
+.studio .technique-choice::before { content: ""; position: absolute; width: 3px; height: 34px; top: 17px; left: 0; border-radius: 2px; background: var(--blue); opacity: 0; transition: opacity .18s ease; }
+.studio .swatch-frame { display: block; position: relative; width: 61px; aspect-ratio: 1; background: var(--cloth); box-shadow: 0 2px 5px #183f581a; transform: rotate(-1deg); transition: transform .25s ease; }
+.studio .technique-choice:nth-child(even) .swatch-frame { transform: rotate(1.2deg); }
+.studio .swatch-frame::after { content: ""; position: absolute; inset: 0; border: 1px solid #153e6012; pointer-events: none; }
+.studio .swatch-frame canvas { display: block; width: 100%; height: 100%; }
+.studio .swatch-check { position: absolute; right: -5px; bottom: -5px; width: 19px; height: 19px; border: 2px solid var(--table); background: var(--blue); color: #fff; border-radius: 50%; display: grid; place-items: center; font-size: 10px; opacity: 0; transform: scale(.65); transition: opacity .18s, transform .18s; }
+.studio .swatch-caption { display: flex; flex-direction: column; gap: 0; padding-top: 8px; }
+.studio .swatch-caption strong { font-size: 13px; font-weight: 500; letter-spacing: .08em; line-height: 1.5; }
+.studio .swatch-caption small { display: none; }
+.studio .technique-choice[aria-pressed="true"] { color: var(--ink); }
+.studio .technique-choice[aria-pressed="true"]::before { opacity: 1; }
+.studio .technique-choice[aria-pressed="true"] strong { font-weight: 600; }
+.studio .technique-choice[aria-pressed="true"] .swatch-frame { transform: rotate(0) scale(1.03); }
+.studio .technique-choice[aria-pressed="true"] .swatch-check { opacity: 1; transform: scale(1); }
+.studio .technique-choice:focus-visible { outline-offset: 2px; }
+@media (hover: hover) {
+  .studio .technique-choice:hover .swatch-frame { transform: rotate(0) translateY(-3px); }
+  .studio .technique-choice:hover { color: var(--ink); }
+}
+
+/* No enclosing dashboard card: the cloth sits directly on the table. */
+.studio .workbench { grid-column: 2; grid-row: 2; border: 0; border-radius: 0; box-shadow: none; background: transparent; overflow: visible; min-width: 0; }
+.studio .steps { width: calc(100% - var(--studio-tools)); justify-content: center; gap: 34px; min-height: 44px; padding: 0 16px 5px; border: 0; background: transparent; }
+.studio .steps li { font-size: 12px; color: #7c8d91; gap: 8px; white-space: nowrap; }
+.studio .steps li:not(:last-child)::after { width: 15px; right: -24px; background: #c0cdcf; }
+.studio .step-number { width: 22px; height: 22px; border-color: #c7d1d0; font-size: 11px; }
+.studio .steps .active { color: var(--ink); }
+.studio .steps .active .step-number { border-color: var(--blue); background: var(--blue); color: #fff; }
+.studio .steps .complete .step-number { border-color: #d4dfde; background: #e0e8e6; color: #4e727e; }
+.studio .bench-grid { grid-template-columns: minmax(0, 1fr) var(--studio-tools); align-items: stretch; min-height: 616px; }
+.studio .stage-panel { background: transparent; min-width: 0; }
+.studio .stage-top { min-height: 38px; padding: 6px 26px 6px; color: #647e88; font-size: 12px; }
+.studio .stage-top > div { gap: 8px; min-width: 0; }
+.studio .state-dot { width: 5px; height: 5px; background: #547e89; }
+.studio #stage-title { line-height: 1.6; }
+.studio #stage-title:focus-visible { outline: 2px solid #527c8f; outline-offset: 4px; }
+.studio .stage-top > span { font-size: 11px; color: #7a9096; }
+.studio .cloth-stage { --cloth-size: clamp(420px, 38vw, 510px); min-height: 540px; height: auto; flex: 1; padding: 13px 24px 44px; overflow: hidden; background: transparent; }
+.studio .cloth,
+.studio .cloth[data-folded="false"] { width: var(--cloth-size); height: var(--cloth-size); aspect-ratio: 1; transform: none; flex-shrink: 0; box-shadow: 0 16px 24px -18px #183e5861, 0 3px 7px #173b4d12; transition: transform 1.02s cubic-bezier(.22,.74,.2,1); }
+.studio .cloth::after { inset: 0; border: 1px solid #b8bca62b; z-index: 8; }
+.studio #fabric { width: 100%; height: 100%; border-radius: 0; clip-path: polygon(.1% 0, 21% .15%, 42% 0, 68% .15%, 99.8% 0, 100% 29%, 99.85% 57%, 100% 80%, 99.8% 99.9%, 74% 100%, 48% 99.85%, 23% 100%, .1% 99.8%, 0 71%, .15% 45%, 0 20%); }
+.studio .cloth.dyeing { animation: none; }
+.studio .cloth[data-stage="tie"] { transform: none; }
+.studio .cloth[data-stage="dyeing"],
+.studio .cloth[data-stage="dye"] { transform: translateY(12px) rotate(2deg) scale(var(--fold-x,.72), var(--fold-y,.72)); }
+.studio .cloth[data-stage="unfolding"],
+.studio .cloth[data-stage="unfold"] { transform: rotate(0) scale(1); }
+.studio .cloth-stage[data-phase="tie"] .cloth { touch-action: none; }
+.studio .stage-message { display: none; }
+.studio .stage-bottom { bottom: 12px; left: 20px; right: 20px; z-index: 3; gap: 8px; color: #5f7a83; font-size: 12px; line-height: 1.7; text-align: center; }
+.studio .gesture-icon { font-size: 18px; }
+.studio .dye-caption { bottom: 12px; color: #245576; font-size: 13px; letter-spacing: .03em; line-height: 1.7; }
+.studio .stage-footer { min-height: 41px; border: 0; padding: 5px 28px 2px; background: transparent; color: #69818a; font-size: 12px; gap: 12px; }
+.studio .stage-footer p { max-width: 100%; line-height: 1.7; }
+.studio .stage-footer > span { display: none; }
+
+/* The preparation guide shares the fabric coordinate system. */
+.studio .preparation-guide { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; overflow: hidden; pointer-events: none; transition: opacity .28s ease; }
+.studio .preparation-guide * { vector-effect: non-scaling-stroke; }
+.studio .fold-line { fill: none; stroke: #64828a80; stroke-width: 1; stroke-dasharray: 5 4; }
+.studio .fold-line.secondary { stroke: #7c979e55; stroke-width: .8; stroke-dasharray: 2 5; }
+.studio .binding-line { fill: none; stroke: #a38159; stroke-width: 3; stroke-linecap: round; }
+.studio .clamp-plate { fill: #ac936a40; stroke: #8b7959b3; stroke-width: 1.7; stroke-linejoin: round; }
+.studio .stitch-outline { fill: none; stroke: #738c9192; stroke-width: 1.4; stroke-dasharray: 2 4; stroke-linecap: round; }
+.studio .stitch-thread { fill: none; stroke: #98724d; stroke-width: 2; stroke-linecap: round; }
+.studio .crease-line { fill: none; stroke: #78909673; stroke-width: 1; stroke-linecap: round; }
+.studio .handles { position: absolute; inset: 0; z-index: 4; pointer-events: none; transition: opacity .23s ease; }
+.studio .fabric-handle { position: absolute; width: 46px; height: 46px; min-width: 0; min-height: 0; padding: 0; border: 0; border-radius: 50%; background: transparent; transform: translate(-50%,-50%); touch-action: none; pointer-events: auto; cursor: grab; isolation: isolate; }
+.studio .fabric-handle:active { cursor: grabbing; }
+.studio .fabric-handle::before { content: ""; position: absolute; inset: -4px; border: 1px dashed #537d8999; border-radius: 50%; opacity: 0; transition: opacity .15s; pointer-events: none; }
+.studio .fabric-handle.selected::before,
+.studio .fabric-handle:hover::before,
+.studio .fabric-handle:focus-visible::before { opacity: 1; }
+.studio .fabric-handle:focus-visible { outline-offset: 5px; }
+.studio .fabric-handle:disabled { opacity: 1; cursor: default; }
+.studio .string-loop { position: absolute; inset: 11px 7px 12px; border: 3px solid #a68056; border-top-color: #ccb087; border-left-color: #c09e74; border-radius: 49%; box-shadow: 0 1px 2px #483e2555, 0 0 0 1px #74553899, inset 0 1px 2px #4a331b55; transform: rotate(19deg); }
+.studio .string-loop::after { content: ""; position: absolute; inset: 0 -2px -1px; border: 2px solid #b7966b; border-right-color: #9a754c; border-radius: 49%; transform: rotate(-25deg); }
+.studio .string-tail { position: absolute; top: 51%; left: 54%; width: 2px; height: 26px; border-radius: 100%; background: #ad895e; box-shadow: 1px 0 #765431; transform: rotate(-29deg); transform-origin: top; }
+.studio .string-tail::after { content: ""; position: absolute; top: 0; left: -1px; width: 2px; height: 21px; border-radius: 100%; background: #9e7a51; transform: rotate(51deg); transform-origin: top; }
+.studio .fabric-handle > small { position: absolute; top: -3px; right: -3px; width: 18px; height: 18px; display: grid; place-items: center; border: 1px solid #eeefe5; border-radius: 50%; background: #567683; color: #fff; font-size: 10px; font-weight: 500; }
+.studio .fabric-handle.selected > small { background: var(--ink); }
+.studio .stitch-handle { width: 44px; height: 44px; }
+.studio .stitch-handle::after { content: ""; position: absolute; left: 20px; top: 6px; width: 2px; height: 30px; border-radius: 100% 100% 40% 40%; background: linear-gradient(90deg,#75827d,#d3dbd3); box-shadow: 1px 0 #8b9790; transform: rotate(35deg); }
+.studio .cloth:not([data-stage="tie"]) .handles { opacity: 0; pointer-events: none; }
+.studio .cloth:not([data-stage="tie"]) .fabric-handle { pointer-events: none; }
+.studio .cloth:not([data-stage="tie"]) .preparation-guide { opacity: 0; }
+.studio .cloth[data-stage="unfold"].show-guides .preparation-guide { opacity: .95; }
+.studio .cloth[data-stage="unfold"].show-guides .fold-line,
+.studio .cloth[data-stage="unfold"].show-guides .crease-line,
+.studio .cloth[data-stage="unfold"].show-guides .stitch-outline { stroke: #e9efe4d9; }
+.studio .cloth[data-stage="unfold"].show-guides .binding-line,
+.studio .cloth[data-stage="unfold"].show-guides .stitch-thread { stroke: #d4bc8f; }
+.studio .dye-mask { position: absolute; inset: 0; z-index: 5; opacity: 0; pointer-events: none; background: linear-gradient(112deg,#2c5979f5,#183e61fa 65%,#28516df7); transition: opacity .78s ease; }
+.studio .cloth[data-stage="dyeing"] .dye-mask { animation: atelier-ink-fill 1.15s ease both; }
+.studio .cloth[data-stage="dye"] .dye-mask { opacity: 1; }
+.studio .bundle-thread { position: absolute; inset: 0; z-index: 6; opacity: 0; pointer-events: none; background: linear-gradient(90deg,transparent 47.7%,#d0b58a 48%,#a17c51 49%,#d6bd93 49.4%,transparent 50%),linear-gradient(0deg,transparent 47.5%,#a78660 48%,#d0b58a 49%,#957249 49.7%,transparent 50%); transition: opacity .28s ease; }
+.studio .cloth[data-stage="dyeing"] .bundle-thread,
+.studio .cloth[data-stage="dye"] .bundle-thread { opacity: 1; }
+@keyframes atelier-ink-fill { 0% { opacity: 0; } 26% { opacity: .45; } 70%,100% { opacity: 1; } }
+
+/* One compact instrument column, then a quiet description of the finished work. */
+.studio .tools { padding: 27px 0 23px 28px; min-width: 0; min-height: 616px; border-left: 1px solid #c8d2cf; background: transparent; }
+.studio .tool-heading { margin-bottom: 0; }
+.studio .tool-heading .method-caption { margin: 0 0 10px; min-height: 0; color: #6b858d; font-size: 12px; line-height: 1.6; letter-spacing: .08em; }
+.studio .tool-heading h2 { font-size: 28px; line-height: 1.45; font-weight: 500; letter-spacing: .015em; margin: 0 0 13px; color: var(--ink); }
+.studio .tool-heading p { font-size: 13px; line-height: 1.9; min-height: 0; color: #587581; margin: 0; }
+.studio #controls { margin: 24px 0 0; }
+.studio #controls:disabled { opacity: .57; }
+.studio .method-controls { min-width: 0; }
+.studio .control-section { margin-bottom: 20px; }
+.studio .control-label { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 0 8px; font-size: 13px; line-height: 1.7; }
+.studio .control-label output { font-size: 12px; color: #567782; }
+.studio .point-summary { align-items: center; min-height: 36px; margin: 0; }
+.studio .point-summary output { margin-right: auto; }
+.studio .point-summary > button { min-height: 36px; padding: 7px 0 7px 8px; border: 0; background: transparent; font-size: 12px; color: #637e87; text-decoration: underline; text-underline-offset: 4px; white-space: nowrap; }
+.studio .point-summary > button:disabled { opacity: .4; cursor: default; text-decoration: none; }
+.studio .select-control { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-width: 0; }
+.studio .select-control label { font-size: 13px; font-weight: 500; line-height: 1.7; }
+.studio .select-control > div { display: flex; flex-direction: column; gap: 2px; }
+.studio .select-control .mini-note { font-size: 11px; color: #7d9196; }
+.studio .select-control select { width: 113px; max-width: 53%; min-height: 40px; padding: 8px 9px; border: 1px solid #bac9cb; border-radius: 2px; background: #f9faf5; color: #315b70; font: inherit; font-size: 13px; cursor: pointer; }
+.studio .select-control select:focus-visible { outline: 3px solid #527c8f; outline-offset: 3px; }
+.studio .range-group { margin-bottom: 20px; }
+.studio .range-heading { font-size: 13px; margin-bottom: 5px; }
+.studio .range-heading output { font-size: 12px; color: #68838d; }
+.studio .range-ends { font-size: 11px; line-height: 1.6; color: #789096; }
+.studio input[type="range"] { height: 29px; accent-color: var(--blue); }
+.studio input[type="range"]::-webkit-slider-runnable-track { height: 3px; border-radius: 3px; background: #c6d3d3; }
+.studio input[type="range"]::-webkit-slider-thumb { width: 16px; height: 16px; margin-top: -6.5px; border: 3px solid #f1f0e8; box-shadow: 0 0 0 1px #71909a; background: var(--blue); }
+.studio input[type="range"]::-moz-range-track { height: 3px; border: 0; border-radius: 3px; background: #c6d3d3; }
+.studio input[type="range"]::-moz-range-thumb { width: 10px; height: 10px; border: 3px solid #f1f0e8; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 1px #71909a; }
+.studio .common-controls { border-top: 1px solid #d3dcd6; padding-top: 19px; }
+.studio .stitch-progress { height: 3px; border-radius: 2px; background: #ccd7d4; overflow: hidden; margin: 14px 0 4px; }
+.studio .stitch-progress > span { display: block; width: 100%; height: 100%; transform-origin: left; background: #426f82; transition: transform .25s ease; }
+.studio .dip-group { margin: 0 0 8px; }
+.studio .actions { margin-top: 26px; padding-top: 0; gap: 9px; }
+.studio .primary-button { min-height: 49px; padding: 14px 17px; border: 1px solid var(--blue); border-radius: 2px; background: var(--blue); color: #f8faf5; font-size: 13px; text-align: left; }
+.studio .primary-button:hover { background: #183f58; border-color: #183f58; }
+.studio .download-button { min-height: 42px; padding: 10px 4px; color: var(--blue); font-size: 13px; }
+.studio .guide-toggle { margin-top: 17px; color: #577581; font-size: 12px; }
+.studio .guide-toggle label { gap: 9px; line-height: 1.7; }
+.studio .guide-toggle input { width: 14px; height: 14px; margin: 0; }
+.studio .tool-footnote { font-size: 11px; line-height: 1.9; color: #7b9096; margin-top: 17px; }
+.studio .result-notes { margin: 29px 0 8px; }
+.studio .result-kicker { margin: 0 0 14px; font-size: 12px; color: #6e8790; }
+.studio .result-notes dl { display: grid; grid-template-columns: auto 1fr; gap: 13px 18px; margin: 0; padding: 0 0 22px; border-bottom: 1px solid #cdd7d4; font-size: 13px; line-height: 1.7; }
+.studio .result-notes dt { color: #738b93; }
+.studio .result-notes dd { margin: 0; text-align: right; color: #244e63; }
+.studio .result-notes > p:last-child { font-size: 13px; line-height: 1.9; color: #597984; margin: 22px 0 0; }
+.studio[data-phase="unfold"] .actions { margin-top: auto; padding-top: 27px; }
+.studio[data-phase="unfold"] #download { order: 1; display: flex; align-items: center; justify-content: space-between; min-height: 49px; padding: 14px 17px; border: 1px solid var(--blue); border-radius: 2px; background: var(--blue); color: #fff; font-size: 13px; text-align: left; }
+.studio[data-phase="unfold"] #download:hover { background: #183f58; text-decoration: none; }
+.studio[data-phase="unfold"] .primary-button { order: 2; justify-content: center; min-height: 41px; border: 0; padding: 10px 5px; background: transparent; color: #587b89; font-size: 12px; text-align: center; }
+.studio[data-phase="unfold"] .primary-button:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+.studio .observation { grid-column: 2; padding: 20px 0 18px; gap: 13px; color: #68818b; border-top: 1px solid #d4dbd4; margin-top: 22px; }
+.studio .observation-mark { font-size: 23px; color: #5b7f8d; }
+.studio .observation h2 { font-size: 13px; color: #3e6575; font-weight: 500; margin-bottom: 5px; }
+.studio .observation p { font-size: 12px; line-height: 1.9; color: #748a91; max-width: 590px; }
+.studio .observation details { font-size: 12px; min-width: 0; max-width: 340px; }
+.studio .observation summary { font-size: 12px; color: #587b88; padding: 2px 0; }
+.studio .observation details[open] { padding-left: 20px; border-left: 1px solid #ccd6d1; flex-basis: 340px; }
+.studio .model-notes { padding-top: 15px; overflow-wrap: anywhere; }
+.studio .model-notes p { font-size: 12px; line-height: 1.9; }
+.studio .model-notes a { font-size: 12px; line-height: 1.8; color: var(--blue); }
+.studio .page-footer { max-width: 1600px; padding: 10px 48px 23px; font-size: 11px; color: #809397; letter-spacing: .02em; }
+
+@media (min-width: 1600px) {
+  .studio { --studio-tools: 320px; }
+  .studio main { grid-template-columns: 104px minmax(0,1fr); column-gap: 42px; }
+  .studio .swatch-frame { width: 66px; }
+  .studio .technique-shelf { gap: 9px; }
+  .studio .cloth-stage { --cloth-size: 540px; min-height: 584px; }
+  .studio .bench-grid,.studio .tools { min-height: 660px; }
+  .studio .tools { padding-left: 34px; }
+}
+@media (max-width: 1199px) {
+  .studio { --studio-tools: 278px; }
+  .studio .masthead { padding: 23px 34px 12px; }
+  .studio main { display: block; padding: 0 34px; }
+  .studio .intro { min-height: 65px; padding: 8px 0 14px; }
+  .studio .intro h1 { font-size: 25px; }
+  .studio .technique-picker { padding: 0; margin-bottom: 19px; }
+  .studio .picker-heading { display: flex; align-items: baseline; justify-content: space-between; padding: 0; margin-bottom: 10px; }
+  .studio .picker-heading > span { display: block; font-size: 11px; color: #82969b; }
+  .studio .technique-shelf { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 10px; }
+  .studio .technique-choice { padding: 3px 7px 9px; }
+  .studio .technique-choice::before { top: auto; bottom: 0; left: calc(50% - 20px); height: 2px; width: 40px; }
+  .studio .swatch-frame { width: 63px; }
+  .studio .swatch-caption { padding-top: 7px; }
+  .studio .swatch-caption small { display: none; }
+  .studio .bench-grid,.studio .tools { min-height: 559px; }
+  .studio .cloth-stage { --cloth-size: min(42vw,420px); min-height: 475px; padding: 10px 16px 43px; }
+  .studio .stage-top { padding-inline: 18px; }
+  .studio .stage-top > span { display: none; }
+  .studio .tools { padding: 21px 0 20px 23px; }
+  .studio .tool-heading h2 { font-size: 25px; }
+  .studio .tool-heading p { font-size: 13px; }
+  .studio .steps { min-height: 45px; gap: 27px; }
+  .studio .steps li { font-size: 11px; }
+  .studio .steps li:not(:last-child)::after { right: -21px; width: 13px; }
+  .studio .observation p { max-width: 500px; }
+  .studio .page-footer { padding-inline: 34px; }
+}
+@media (max-width: 899px) and (min-width: 780px) {
+  .studio { --studio-tools: 255px; }
+  .studio .masthead { padding-inline: 25px; }
+  .studio main { padding-inline: 25px; }
+  .studio .cloth-stage { --cloth-size: min(42vw,350px); min-height: 444px; padding-inline: 9px; }
+  .studio .stage-top { padding-inline: 9px; }
+  .studio .stage-footer { padding-inline: 10px; }
+  .studio .tools { padding-left: 20px; }
+  .studio .tool-heading h2 { font-size: 23px; }
+  .studio .control-label,.studio .select-control label,.studio .range-heading { font-size: 12px; }
+  .studio .select-control select { width: 103px; font-size: 12px; }
+  .studio .steps { padding-inline: 5px; gap: 18px; }
+  .studio .steps li:not(:last-child)::after { display: none; }
+}
+@media (max-width: 779px) {
+  .studio .masthead { padding: 23px 23px 14px; gap: 15px; }
+  .studio .wordmark { font-size: 19px; gap: 8px; }
+  .studio .brand-icon { font-size: 29px; }
+  .studio .prototype-label { font-size: 11px; padding-left: 15px; }
+  .studio .reset-button { font-size: 11px; }
+  .studio main { display: block; padding: 0 23px; }
+  .studio .intro { min-height: 62px; padding: 9px 0 15px; }
+  .studio .intro h1 { font-size: 25px; line-height: 1.5; }
+  .studio .technique-picker { margin-bottom: 13px; }
+  .studio .picker-heading { margin-bottom: 9px; }
+  .studio .picker-heading h2 { font-size: 12px; }
+  .studio .picker-heading > span { font-size: 11px; max-width: 56%; text-align: right; line-height: 1.6; }
+  .studio .technique-shelf { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 83px; overflow-x: auto; padding: 5px 1px 10px; gap: 11px; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-width: thin; scrollbar-color: #9eb3b6 transparent; }
+  .studio .technique-shelf::-webkit-scrollbar { height: 3px; }
+  .studio .technique-shelf::-webkit-scrollbar-thumb { background: #9eb3b6; border-radius: 3px; }
+  .studio .technique-choice { padding: 3px 5px 10px; }
+  .studio .swatch-frame { width: 66px; }
+  .studio .swatch-caption strong { font-size: 13px; }
+  .studio .swatch-check { width: 19px; height: 19px; }
+  .studio .workbench { overflow: visible; }
+  .studio .steps { width: 100%; justify-content: center; gap: 25px; padding: 10px 0 12px; min-height: 48px; }
+  .studio .steps li { font-size: 12px; gap: 7px; }
+  .studio .steps li:not(:last-child)::after { width: 10px; right: -18px; }
+  .studio .bench-grid { display: block; min-height: 0; }
+  .studio .stage-top { padding: 8px 2px 5px; min-height: 38px; font-size: 12px; }
+  .studio .stage-top > span { display: block; font-size: 11px; }
+  .studio .cloth-stage { --cloth-size: min(76vw,430px); min-height: 0; height: auto; padding: 11px 0 43px; }
+  .studio .stage-bottom { bottom: 8px; left: 0; right: 0; font-size: 12px; line-height: 1.7; }
+  .studio .stage-footer { min-height: 40px; padding: 4px 1px 8px; font-size: 12px; }
+  .studio .dye-caption { bottom: 9px; font-size: 12px; }
+  .studio .tools { min-height: 0; padding: 26px 0 24px; margin-top: 15px; border-left: 0; border-top: 1px solid #cbd5d0; background: transparent; }
+  .studio .tool-heading { max-width: 560px; }
+  .studio .tool-heading .method-caption { font-size: 12px; margin-bottom: 7px; }
+  .studio .tool-heading h2 { font-size: 27px; line-height: 1.45; margin-bottom: 10px; }
+  .studio .tool-heading p { font-size: 14px; line-height: 1.9; }
+  .studio #controls { margin-top: 23px; }
+  .studio .control-section { margin-bottom: 21px; }
+  .studio .control-label,.studio .select-control label,.studio .range-heading { font-size: 14px; }
+  .studio .control-label output,.studio .range-heading output { font-size: 13px; }
+  .studio .point-summary { min-height: 44px; }
+  .studio .point-summary > button { min-height: 44px; font-size: 12px; }
+  .studio .select-control select { min-height: 44px; width: 138px; max-width: 52%; font-size: 14px; padding: 9px 12px; }
+  .studio .select-control .mini-note { font-size: 12px; }
+  .studio input[type="range"] { height: 36px; }
+  .studio input[type="range"]::-webkit-slider-thumb { width: 18px; height: 18px; margin-top: -7.5px; }
+  .studio .range-ends { font-size: 12px; }
+  .studio .common-controls { padding-top: 21px; }
+  .studio .range-group { margin-bottom: 24px; }
+  .studio .actions { margin-top: 25px; gap: 9px; }
+  .studio .primary-button { min-height: 52px; padding: 15px 18px; font-size: 14px; }
+  .studio .tool-footnote { font-size: 12px; margin-top: 16px; line-height: 1.9; }
+  .studio .guide-toggle { font-size: 13px; }
+  .studio .result-notes { margin-top: 24px; }
+  .studio .result-notes dl { font-size: 14px; padding-bottom: 21px; }
+  .studio .result-notes > p:last-child { font-size: 14px; }
+  .studio[data-phase="unfold"] .actions { margin-top: 25px; padding-top: 0; }
+  .studio[data-phase="unfold"] #download { min-height: 52px; font-size: 14px; padding: 15px 18px; }
+  .studio[data-phase="unfold"] .primary-button { min-height: 44px; font-size: 13px; }
+  .studio .observation { flex-wrap: wrap; padding: 23px 0 18px; margin-top: 1px; gap: 11px; }
+  .studio .observation > div:nth-child(2) { flex: 1; min-width: 0; }
+  .studio .observation h2 { font-size: 13px; }
+  .studio .observation p { font-size: 12px; line-height: 1.9; max-width: none; }
+  .studio .observation details,
+  .studio .observation details[open] { flex: 0 1 calc(100% - 34px); margin: 2px 0 0 34px; min-width: 0; max-width: calc(100% - 34px); padding: 0; border: 0; }
+  .studio .observation summary { font-size: 12px; }
+  .studio .page-footer { padding: 11px 23px 24px; gap: 13px; font-size: 11px; }
+}
+@media (max-width: 389px) {
+  .studio .masthead { padding: 21px 18px 12px; gap: 11px; }
+  .studio .wordmark { font-size: 18px; }
+  .studio .prototype-label { display: none; }
+  .studio .reset-button { font-size: 11px; }
+  .studio main { padding-inline: 18px; }
+  .studio .intro { min-height: 63px; }
+  .studio .intro h1 { font-size: 23px; }
+  .studio .picker-heading > span { font-size: 10px; }
+  .studio .technique-shelf { grid-auto-columns: 75px; gap: 10px; }
+  .studio .swatch-frame { width: 61px; }
+  .studio .steps { gap: 15px; }
+  .studio .steps li { font-size: 11px; gap: 5px; }
+  .studio .steps li:not(:last-child)::after { display: none; }
+  .studio .step-number { width: 21px; height: 21px; font-size: 10px; }
+  .studio .cloth-stage { --cloth-size: min(78vw,275px); }
+  .studio .stage-top > span { font-size: 10px; }
+  .studio .stage-bottom { font-size: 11px; }
+  .studio .tool-heading h2 { font-size: 25px; }
+  .studio .page-footer { padding-inline: 18px; font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio .swatch-frame,.studio .swatch-check,.studio .technique-choice::before,
+  .studio .cloth,.studio .preparation-guide,.studio .handles,.studio .fabric-handle::before,
+  .studio .dye-mask,.studio .bundle-thread,.studio .stitch-progress > span { transition: none !important; }
+  .studio .cloth[data-stage="dyeing"] .dye-mask { animation: none !important; opacity: 1; }
+  .studio .technique-choice:hover .swatch-frame { transform: none; }
+}

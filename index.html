@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183f63">
+  <meta name="description" content="留一处白，让花生长。尝试圆花、条纹、雪花、夹扎、缝花与云雾，亲手留下自己的扎染纹样。">
+  <title>结里生花 · 放肆染</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='8' fill='%23244f73'/%3E%3Ccircle cx='24' cy='24' r='13' fill='none' stroke='%23eeefe5' stroke-width='5'/%3E%3Ccircle cx='24' cy='24' r='5' fill='%23eeefe5'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="studio.css">
+  <link rel="stylesheet" href="scatter-studio.css">
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="experience.css">
+  <script defer src="techniques.js"></script>
+  <script defer src="cover-art.js"></script>
+  <script defer src="experience-state.js"></script>
+  <script defer src="artwork.js"></script>
+  <script defer src="app.js"></script>
+  <script defer src="intro.js"></script>
+  <script defer src="scatter.js"></script>
+</head>
+<body data-view="landing">
+  <section class="landing" id="landing" aria-labelledby="landing-title">
+    <canvas class="landing-art" id="landing-art" width="960" height="640" aria-hidden="true"></canvas>
+    <div class="landing-shade" aria-hidden="true"></div>
+    <header class="landing-header">
+      <div class="landing-brand"><svg class="cover-mark brand-flower" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 5C24 9 24 10 29 9C29 14 31 16 35 20C31 24 29 25 29 31C24 30 23 31 20 35C16 31 14 30 9 31C10 25 8 24 5 20C9 16 10 14 9 9C14 10 16 9 20 5Z"/><circle cx="20" cy="20" r="5"/></svg><span>结里生花</span></div>
+      <div class="landing-controls">
+        <button class="shuffle-button" id="reshuffle" type="button">再散一次 ↻</button>
+        <details class="cover-info"><summary>关于这场实验</summary><div><p>结里生花，放肆染。六种染法，从一次直觉开始。</p><p>先把碎片摆成你喜欢的样子，再让白布入场。扎结、浸染、展开，看看留白怎样生长。</p><p>首页蓝白布纹取自<a href="https://www.metmuseum.org/art/collection/search/45399" target="_blank" rel="noreferrer">18世纪后半的鹿子绞小袖</a>局部（日本，The Met藏）。密集的小点由逐点捆扎防染形成。馆方介绍，这类费工的满幅鹿子绞曾用于京都富裕商户家庭的嫁妆。图像为公共领域。</p><p>这是二维扎染视觉体验，实际染布仍需实物校准。</p></div></details>
+      </div>
+    </header>
+    <div class="landing-content scatter-poster" id="scatter-poster">
+      <svg class="scatter-scribble" viewBox="0 0 1440 800" preserveAspectRatio="none" aria-hidden="true"><path d="M-40 370C140 250 180 490 330 386S500 165 635 275S830 600 1060 420S1250 230 1500 330"/><path d="M1080 65C990 100 980 185 1080 198C1180 211 1225 126 1155 106C1085 86 1060 155 1125 160"/><path d="M80 705L260 665M91 717L274 679"/></svg>
+      <h1 id="landing-title" aria-label="结里生花，放肆染"><span class="scatter-glyph glyph-1" aria-hidden="true">结</span><span class="scatter-glyph glyph-2" aria-hidden="true">里</span><span class="scatter-glyph glyph-3" aria-hidden="true">生</span><span class="scatter-glyph glyph-4" aria-hidden="true">花</span></h1>
+      <div class="scatter-piece piece-a textile-scrap" tabindex="0" role="img" aria-label="18世纪日本鹿子绞小袖的蓝白扎染局部，The Met藏，可拖动或用方向键移动"><img src="assets/met-kanoko-shibori-kosode-45399.jpg" width="960" height="1200" alt="" draggable="false"></div>
+      <div class="scatter-piece piece-b" tabindex="0" role="img" aria-label="蓝色花印碎片，可拖动或用方向键移动"><div class="ink-rosette" aria-hidden="true"></div></div>
+      <div class="scatter-piece piece-c" tabindex="0" role="img" aria-label="线圈碎片，可拖动或用方向键移动"><svg class="loop-drawing" viewBox="0 0 180 180" aria-hidden="true"><path d="M30 130C-16 70 35 12 88 34C157 62 101 158 59 128C29 105 79 69 109 83C163 110 143 186 102 149C62 113 97 3 149 18M149 18L158 64M149 18L113 48"/></svg></div>
+      <div class="scatter-piece piece-d paper-note" tabindex="0" role="img" aria-label="别按纹路来标签，可拖动或用方向键移动"><span>别按<br>纹路来。</span></div>
+      <div class="entry-ticket"><button type="button" class="enter-button" id="enter-studio"><span id="enter-label">开染！</span><span class="enter-arrow" aria-hidden="true">↗</span></button><p>点一下，让白布入场。</p></div>
+      <p class="poster-whisper">拖动碎片，打乱这张海报。</p>
+    </div>
+    <footer class="landing-footer"><span>放肆染 / 自由扎染实验</span><span>六种染法，从一根线开始。</span></footer>
+  </section>
+  <button type="button" class="skip-arrival" id="skip-arrival" hidden>跳过入场</button>
+  <p class="sr-only" id="intro-status" aria-live="polite"></p>
+  <div class="studio scatter-studio" id="studio" hidden inert>
+    <a class="skip-link" href="#workspace">进入扎染工作台</a>
+    <header class="masthead">
+      <button type="button" class="wordmark wordmark-button" id="back-home" aria-label="结里生花，回到首页"><svg class="brand-icon brand-flower" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 5C24 9 24 10 29 9C29 14 31 16 35 20C31 24 29 25 29 31C24 30 23 31 20 35C16 31 14 30 9 31C10 25 8 24 5 20C9 16 10 14 9 9C14 10 16 9 20 5Z"/><circle cx="20" cy="20" r="5"/></svg>结里生花</button>
+      <span class="prototype-label">放肆染 / 制作现场</span>
+      <button class="text-button reset-button" type="button" id="reset" title="保留组合、位置和参数，只改变随机纹理">换个随机纹理</button>
+    </header>
+    <main id="workspace">
+      <div class="intro">
+        <div><h1>把规矩，染掉。</h1><p class="intro-note">挑一张花样，跟着直觉动手。</p></div>
+      </div>
+      <section class="experience-bar" aria-label="编辑历史与草稿">
+        <div class="history-actions"><button type="button" id="undo" disabled>↶ 撤销</button><button type="button" id="redo" disabled>↷ 重做</button><span id="history-status">最近 100 步可回退</span><button type="button" id="leave-comparison" data-end-comparison hidden>退出对比</button></div>
+        <details class="draft-menu"><summary>草稿与帮助</summary><div class="draft-menu-body"><span id="draft-status" role="status">草稿仅存本机</span><div class="draft-actions"><button type="button" id="export-draft">导出草稿</button><button type="button" id="import-draft">导入草稿</button><input type="file" id="draft-file" accept=".json,application/json" hidden><button type="button" id="tour-open">操作引导</button><button type="button" id="restart" title="恢复默认圆花，可撤销找回当前方案">全部重新开始</button></div><p class="storage-note">草稿和最近100步历史自动保存在此浏览器。清理网站数据前，可导出JSON备份当前布料。</p></div></details>
+      </section>
+      <section class="technique-picker" aria-labelledby="picker-title">
+        <div class="picker-heading"><h2 id="picker-title">单独使用一种</h2><span>卡片单独使用一种；组合请在工具区勾选。</span></div>
+        <div class="technique-shelf" role="group" aria-label="单独使用一种染法">
+          <button type="button" class="technique-choice" data-technique="circle" aria-label="单独使用圆花" aria-pressed="true"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>圆花</strong><small>单独使用</small></span></button>
+          <button type="button" class="technique-choice" data-technique="stripe" aria-label="单独使用条纹" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>条纹</strong><small>单独使用</small></span></button>
+          <button type="button" class="technique-choice" data-technique="snowflake" aria-label="单独使用雪花" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>雪花</strong><small>单独使用</small></span></button>
+          <button type="button" class="technique-choice" data-technique="clamp" aria-label="单独使用夹扎" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>夹扎</strong><small>单独使用</small></span></button>
+          <button type="button" class="technique-choice" data-technique="stitch" aria-label="单独使用缝花" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>缝花</strong><small>单独使用</small></span></button>
+          <button type="button" class="technique-choice" data-technique="cloud" aria-label="单独使用云雾" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>云雾</strong><small>单独使用</small></span></button>
+        </div>
+      </section>
+      <section class="first-dye" id="first-dye" aria-label="操作引导" hidden>
+        <div><span class="guide-step" id="tour-count">第一次染 · 1 / 4</span><strong id="tour-title">在白布上，添一个结。</strong><p id="tour-text">点一下空白布面。按回车也能添一个结，已有的结可以用方向键移动。</p></div><button type="button" id="tour-skip">跳过引导</button>
+      </section>
+      <section class="workbench" aria-label="扎染工作台">
+        <ol class="steps" aria-label="制作进度">
+          <li class="active" data-step="tie"><span class="step-number">1</span><span>处理布料</span></li>
+          <li data-step="dye"><span class="step-number">2</span><span>浸入靛蓝</span></li>
+          <li data-step="unfold"><span class="step-number">3</span><span>展开花纹</span></li>
+        </ol>
+        <div class="bench-grid">
+          <section class="stage-panel" aria-labelledby="stage-title">
+            <div class="stage-top"><div><span class="state-dot" aria-hidden="true"></span><span id="stage-title" tabindex="-1">在白布上放几朵花</span></div><span id="stage-meta">圆花 · 多点捆扎</span></div>
+            <div class="cloth-stage" id="cloth-stage" data-technique="circle" data-phase="tie">
+              <div class="stage-message" id="stage-message" aria-hidden="true"><span>从一处留白开始</span><span class="message-line"></span></div>
+              <div class="cloth-arrival" id="cloth-arrival">
+                <div class="cloth" id="cloth" data-folded="false" data-stage="tie">
+                  <canvas id="fabric" width="720" height="720" role="img" aria-label="待扎染的白色棉布"></canvas>
+                  <svg class="preparation-guide" id="preparation-guide" viewBox="0 0 100 100" aria-hidden="true"></svg>
+                  <div class="handles" id="handles"></div>
+                  <div class="dye-mask" aria-hidden="true"></div>
+                  <div class="bundle-thread" aria-hidden="true"></div>
+                </div>
+              </div>
+              <div class="stage-bottom" id="stage-bottom"><span class="gesture-icon" aria-hidden="true">⌖</span><span id="canvas-hint">点击空白处添一个结，拖动线结调整位置</span></div>
+              <div class="dye-caption" id="dye-caption" aria-live="polite"></div>
+            </div>
+            <div class="stage-footer"><p id="live-summary" role="status" aria-live="polite">每个结，都会留下自己的圆花。</p><span id="render-status" aria-hidden="true">你的每一步，都在布里</span></div>
+          </section>
+          <aside class="tools" aria-label="扎染工具">
+            <div class="tool-heading"><p class="method-caption" id="method-caption">多点捆扎</p><h2 id="tool-title">圆花</h2><p id="tool-description">捏起布料，用线扎紧。每一处线结，都会留下自己的圆花。</p></div>
+            <details class="mix-panel" id="mix-panel"><summary id="mix-summary">组合染法（试验）</summary><p id="mix-note">最多选三种。选好组合后，点击“编辑圆花”等按钮分别调整位置和专属参数。松紧、染次作用于整块布，辅助线显示当前编辑的染法。取消后再勾选，会保留之前的参数。</p><div class="mix-options" role="group" aria-label="选择同时作用的染法" aria-describedby="mix-note"><label><input type="checkbox" data-mix="circle"><span>圆花</span></label><label><input type="checkbox" data-mix="stripe"><span>条纹</span></label><label><input type="checkbox" data-mix="snowflake"><span>雪花</span></label><label><input type="checkbox" data-mix="clamp"><span>夹扎</span></label><label><input type="checkbox" data-mix="stitch"><span>缝花</span></label><label><input type="checkbox" data-mix="cloud"><span>云雾</span></label></div><button type="button" id="clear-mix" disabled>仅保留主染法</button><p class="mix-limit" id="mix-limit" role="status">当前为单一染法。</p><p class="mix-model">试验会合并各染法的留白区域，属于二维视觉模拟，尚未用实物复合染色校准。</p></details>
+            <div class="layer-editor" id="layer-editor" hidden><div class="layer-editor-buttons" role="group" aria-label="选择当前编辑的染法"><button type="button" data-edit-layer="circle">编辑圆花</button><button type="button" data-edit-layer="stripe">编辑条纹</button><button type="button" data-edit-layer="snowflake">编辑雪花</button><button type="button" data-edit-layer="clamp">编辑夹扎</button><button type="button" data-edit-layer="stitch">编辑缝花</button><button type="button" data-edit-layer="cloud">编辑云雾</button></div><p id="layer-edit-status" role="status"></p></div>
+            <fieldset id="controls">
+              <legend class="sr-only">调整当前扎染技法</legend>
+              <div class="method-controls">
+                <p class="parameter-scope"><strong id="local-params-title">圆花参数</strong><small>只影响正在编辑的染法</small></p>
+                <div class="control-section" id="point-controls">
+                  <div class="control-label point-summary"><span id="points-label">布上的线结</span><output id="point-count">3 / 6</output><button type="button" id="remove-point">移除选中</button></div>
+                </div>
+                <div class="control-section select-control" id="angle-controls" hidden>
+                  <label for="method-angle">条纹方向</label>
+                  <select id="method-angle"><option value="0" selected>横向</option><option value="45">斜向</option><option value="90">纵向</option></select>
+                </div>
+                <div class="control-section select-control" id="petal-controls" hidden>
+                  <label for="method-petals">对称花瓣</label>
+                  <select id="method-petals"><option value="4">四瓣</option><option value="6" selected>六瓣</option><option value="8">八瓣</option></select>
+                </div>
+                <div class="control-section select-control" id="shape-controls" hidden>
+                  <label for="method-shape">夹板形状</label>
+                  <select id="method-shape"><option value="square" selected>方形</option><option value="diamond">菱形</option><option value="circle">圆形</option></select>
+                </div>
+                <div class="control-section" id="motif-controls" hidden>
+                  <div class="select-control"><label for="method-motif">缝一道轮廓</label><select id="method-motif"><option value="flower" selected>团花</option><option value="leaf">叶片</option><option value="butterfly">蝴蝶</option></select></div>
+                  <div class="stitch-progress" role="progressbar" aria-label="穿线进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="stitch-progress-fill"></span></div>
+                </div>
+                <div class="range-group" id="density-controls" hidden>
+                  <div class="range-heading"><label for="density" id="density-label">折叠密度</label><output id="density-output" for="density">5</output></div>
+                  <input id="density" type="range" min="3" max="9" value="5">
+                  <div class="range-ends" aria-hidden="true"><span>疏</span><span>密</span></div>
+                </div>
+                <div class="range-group">
+                  <div class="range-heading"><label for="radius" id="radius-label">圆花大小</label><output id="radius-output" for="radius">适中</output></div>
+                  <input id="radius" type="range" min="9" max="23" value="17">
+                  <div class="range-ends" aria-hidden="true"><span id="radius-min-label">小</span><span id="radius-max-label">大</span></div>
+                </div>
+              </div>
+              <div class="common-controls">
+                <p class="parameter-scope"><strong>整块布参数</strong><small>松紧和染次影响全部已选染法</small></p>
+                <div class="range-group">
+                  <div class="range-heading"><label for="tightness" id="tightness-label">线的松紧</label><output id="tightness-output" for="tightness">偏紧</output></div>
+                  <input id="tightness" type="range" min="15" max="95" value="70">
+                  <div class="range-ends" aria-hidden="true"><span>松 · 渗色多</span><span>紧 · 留白清楚</span></div>
+                </div>
+                <div class="dip-group select-control">
+                  <div><span id="dip-label">浸染遍数</span><span class="mini-note">越染越深</span></div>
+                  <div class="dye-options" role="group" aria-labelledby="dip-label"><button type="button" data-dips="1" aria-pressed="false"><i aria-hidden="true"></i><span>浅靛<small>一遍</small></span></button><button type="button" data-dips="2" aria-pressed="true"><i aria-hidden="true"></i><span>中靛<small>两遍</small></span></button><button type="button" data-dips="3" aria-pressed="false"><i aria-hidden="true"></i><span>深靛<small>三遍</small></span></button></div>
+                </div>
+              </div>
+            </fieldset>
+            <div class="compare-tip" id="compare-tip" hidden><span id="compare-tip-text"></span><div><button type="button" data-end-comparison>退出对比，自由编辑</button><a href="#comparison">查看两张布</a></div></div>
+            <div class="parameter-sample" id="parameter-sample"><canvas id="sample-canvas" width="160" height="160" role="img" aria-label="当前参数的预计花纹小样"></canvas><div><strong>先看一眼小样</strong><p id="sample-status" role="status">正在准备预计效果…</p><small>程序生成的二维示意，完整布面在展开时揭晓。</small></div></div>
+            <div class="result-notes" id="result-notes" hidden>
+              <p class="result-kicker">这一次的留白</p>
+              <dl id="result-details"></dl>
+            </div>
+            <div class="actions">
+              <button type="button" class="download-button" id="download" hidden>保存这块布 <span aria-hidden="true">↗</span></button>
+              <button type="button" class="poster-button" id="open-poster" hidden>保存作品海报</button>
+              <button type="button" class="view-artwork-button" id="view-artwork" hidden>放大查看成品</button>
+              <button type="button" class="primary-button" id="primary-action">收好线结，浸入靛蓝 <span aria-hidden="true">↓</span></button>
+            </div>
+            <div class="guide-toggle" id="guide-control" hidden><label><input type="checkbox" id="show-guides">看看刚才留下的痕迹</label></div>
+            <div class="compare-entry" id="compare-entry" hidden><label for="compare-key">保留这一张，只改一个地方</label><select id="compare-key"><option value="tightness">比较松紧</option><option value="dips">比较染色深浅</option><option value="radius">比较纹样大小／宽度</option></select><button type="button" id="start-compare">保留这张，开始对比</button></div>
+            <p class="tool-footnote" id="knot-help">点击布面添线结，拖动调整位置；选中后也可用方向键移动。</p>
+          </aside>
+        </div>
+      </section>
+      <section class="comparison" id="comparison" aria-labelledby="compare-title" hidden>
+        <header><div><span class="compare-kicker">同一块布 · 一次只改一个参数</span><h2 id="compare-title">看看变化从哪里来</h2><p id="compare-summary"></p></div><button type="button" id="end-compare" data-end-comparison>退出对比，保留当前布</button></header>
+        <p class="compare-lock" id="compare-lock">对比期间，其余参数、线结位置与底纹固定。结束对比后可以自由调整。</p>
+        <div class="compare-grid"><figure><canvas id="reference-canvas" width="360" height="360" role="img" aria-label="对比前保留的花纹"></canvas><figcaption><strong>A · 保留的这一张</strong><span id="reference-label"></span></figcaption></figure><figure><div class="comparison-current"><canvas id="comparison-canvas" width="360" height="360" role="img" aria-label="本次单参数调整后的花纹" hidden></canvas><p id="compare-waiting">调好参数，浸染并展开后，在这里比较。</p></div><figcaption><strong>B · 这次的变化</strong><span id="comparison-label"></span></figcaption></figure></div>
+        <p class="compare-feedback" id="compare-status" role="status"></p>
+      </section>
+      <section class="observation" aria-label="观察与工艺来源">
+        <div class="observation-mark" aria-hidden="true">↔</div>
+        <div><h2 id="observation-title">每一朵花，都有自己的位置。</h2><p id="observation-text">试着让几个线结靠近，再展开看看留白怎样相遇。</p></div>
+        <details><summary>了解这道工艺</summary><div class="model-notes"><p id="craft-note"></p><a id="craft-source" href="https://www.boisestate.edu/library-makerlab/tie-dye-instructions/" target="_blank" rel="noreferrer">查看工艺图解</a><p>约1500年前的扎染是什么样？中国丝绸博物馆藏<a href="https://www.chinasilkmuseum.com/yz/info_18.aspx?itemid=25774" target="_blank" rel="noreferrer">北朝绞缬绢衣</a>，以扎染形成褐地黄色小点纹，是保存较完整的早期服装实物。</p><p>这是程序生成的二维视觉体验。保留扎结、折叠与留白的关系；真实布料受力和染液渗透仍需实物试染校准。</p></div></details>
+      </section>
+    </main>
+    <footer class="page-footer"><span>结里生花 / 放肆染</span><span>这一次，留点意外。</span></footer>
+  </div>
+  <dialog class="artwork-viewer" id="artwork-viewer" aria-labelledby="viewer-title"><header><h2 id="viewer-title">查看成品</h2><form method="dialog"><button type="submit" id="viewer-close">关闭</button></form></header><div class="viewer-actions"><button type="button" id="viewer-less" aria-label="缩小成品">−</button><output id="viewer-scale" aria-live="polite">100%</output><button type="button" id="viewer-more" aria-label="放大成品">＋</button><button type="button" id="viewer-fit">适应窗口</button><span>放大后可滚动查看细节，Esc关闭</span></div><p id="viewer-status" role="status"></p><div class="artwork-viewport" id="artwork-viewport" tabindex="0" aria-label="成品细节，放大后可用方向键滚动"><canvas id="viewer-canvas" width="1200" height="1200" role="img" aria-label="1200像素扎染成品"></canvas></div></dialog>
+  <dialog class="poster-dialog" id="poster-dialog" aria-labelledby="poster-title"><header><div><small>把这一染，留作一张作品。</small><h2 id="poster-title">作品海报</h2></div><form method="dialog"><button type="submit" id="poster-close">关闭</button></form></header><label class="poster-name" for="poster-name">作品名称（选填，最多20字）<input id="poster-name" maxlength="20" placeholder="这一染，属于你。" autocomplete="off"></label><p id="poster-status" role="status">正在准备海报…</p><div class="poster-preview"><canvas id="poster-canvas" width="1600" height="2200" role="img" aria-label="作品海报预览，含当前布纹和染法配方"></canvas></div><footer><span>1600 × 2200 PNG · 纯布纹仍可单独保存</span><button type="button" id="poster-save" disabled>保存海报 PNG</button></footer></dialog>
+  <noscript><p>请启用 JavaScript，以操作扎染体验。</p></noscript>
+</body>
+</html>

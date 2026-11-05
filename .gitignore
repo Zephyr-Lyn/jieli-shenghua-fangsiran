@@ -1,0 +1,4 @@
+.netlify/
+.openai/
+output/
+preview*.log
