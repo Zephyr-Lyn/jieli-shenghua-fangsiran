@@ -15,7 +15,7 @@
 .poster-dialog button { min-height: 44px; padding: 10px 14px; border: 1px solid #183f63; background: #f7f8f4; color: #183f63; font: inherit; font-size: 13px; cursor: pointer; }
 .poster-dialog :focus-visible,.poster-button:focus-visible { outline: 3px solid #b64236; outline-offset: 3px; }
 .poster-name { display: flex; align-items: center; gap: 12px; font-size: 12px; }
-.poster-name input { min-width: 0; flex: 1; width: 100%; box-sizing: border-box; min-height: 44px; padding: 10px; border: 1px solid #183f6370; background: #fffef5; color: #183f63; font: inherit; font-size: 15px; }
+.poster-name input { min-width: 0; flex: 1; width: 100%; box-sizing: border-box; min-height: 44px; padding: 10px; border: 1px solid #183f6370; background: #fffef5; color: #183f63; font: inherit; font-size: 16px; }
 #poster-status { margin: 0; font-size: 12px; line-height: 1.6; flex-shrink: 0; }
 .poster-preview { min-height: 0; overflow: auto; text-align: center; background: #dce5e6; padding: 12px; }
 .poster-preview canvas { display: block; width: auto; height: auto; max-width: 100%; max-height: 47vh; margin: auto; box-shadow: 3px 4px 12px #183f6320; }
@@ -91,6 +91,11 @@
 .layer-editor p { font-size: 11px; line-height: 1.8; margin-bottom: 0; }
 .artwork-viewer { width: min(1000px,calc(100vw - 32px)); max-height: calc(100dvh - 32px); box-sizing: border-box; padding: 18px; border: 2px solid #183f63; color: #183f63; background: #f0f3f1; }
 .artwork-viewer::backdrop { background: #0a203bcc; }
+.artwork-viewer[open] { display: flex; flex-direction: column; overflow: hidden; }
+.artwork-viewer header,.artwork-viewer .viewer-actions,#viewer-status { flex-shrink: 0; }
+.artwork-viewer header form,.poster-dialog header form { flex-shrink: 0; margin: 0; }
+.artwork-viewer h2,.poster-dialog h2 { min-width: 0; overflow-wrap: anywhere; }
+.artwork-viewer .artwork-viewport { min-height: 0; flex: 1 1 auto; }
 .artwork-viewer header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .artwork-viewer h2 { font-size: 20px; margin: 0; }
 .artwork-viewer form { margin: 0; }
@@ -135,4 +140,39 @@
   .compare-grid { gap: 10px; }
   .compare-grid figcaption { font-size: 12px; }
   .comparison-current p { padding: 8px; font-size: 12px; }
+}
+
+/* Keep controls reachable while images scroll in narrow or short viewports. */
+@media (max-width: 779px), (max-height: 500px) {
+  .artwork-viewer,.poster-dialog {
+    max-width: calc(100% - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    max-height: calc(100dvh - 24px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  }
+  .artwork-viewer button,.experience-bar button,.draft-menu summary,
+  .mix-panel summary,.layer-editor button,.tools .view-artwork-button { min-height: 44px; }
+  .artwork-viewer button { min-width: 44px; }
+  .poster-dialog footer { flex-wrap: wrap; }
+  .poster-dialog footer span { flex: 1 1 110px; }
+  .poster-dialog #poster-save { margin-left: auto; }
+  .draft-menu-body { box-sizing: border-box; max-height: 60dvh; overflow-y: auto; overscroll-behavior: contain; }
+  .scatter-studio .tool-heading h2 { overflow-wrap: anywhere; }
+}
+@media (max-height: 420px) {
+  .poster-dialog { padding: 12px; gap: 8px; }
+  .poster-dialog header small { display: none; }
+  .poster-dialog h2 { font-size: 20px; }
+  .artwork-viewer { padding: 10px; }
+  .artwork-viewer #viewer-status { margin-block: 6px; }
+  .viewer-actions { margin-top: 6px; }
+}
+@media (max-width: 779px) {
+  .landing-header,.scatter-studio .masthead,.scatter-studio main {
+    padding-left: max(17px, env(safe-area-inset-left, 0px));
+    padding-right: max(17px, env(safe-area-inset-right, 0px));
+  }
+  .landing-footer { padding-bottom: max(12px, env(safe-area-inset-bottom, 0px)); }
+  .scatter-studio .page-footer { padding-bottom: max(25px, env(safe-area-inset-bottom, 0px)); }
+}
+@media (max-width: 779px) and (max-height: 420px) {
+  .scatter-studio .cloth-stage { --cloth-size: min(77vw, max(180px, calc(100dvh - 150px))); }
 }

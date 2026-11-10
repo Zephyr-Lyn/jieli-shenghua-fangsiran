@@ -13,8 +13,10 @@
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const fabric = $('fabric'), cloth = $('cloth'), stage = $('cloth-stage'), guide = $('preparation-guide');
   const primary = $('primary-action'), handles = $('handles');
-  const drafts = new Map(), pending = new Map(), layerCache = new Map();
-  let worker = null, jobId = 0, white = null, stitchFrame = 0, stitchSamples = [];
+  const drafts = new Map(), layerCache = new Map();
+  const rendering = DyeRenderService.create(DyePatterns);
+  const { render, draw, dispose } = rendering;
+  let white = null, stitchFrame = 0, stitchSamples = [];
   let prepared = null, motionFrame = 0;
   const qa = new URLSearchParams(location.search).has('qa');
   const state = { params: null, phase: 'tie', selected: 0, stitch: 0, sewing: false, guides: false, pointer: null, revision: 0 };
@@ -301,50 +303,6 @@
   }
   const wait = duration => new Promise(resolve => setTimeout(resolve, duration));
 
-  function startWorker() {
-    if (!globalThis.Worker || !globalThis.OffscreenCanvas || !DyePatterns.workerSource) return;
-    try {
-      const handler = 'self.onmessage=function(e){const j=e.data;try{const c=new OffscreenCanvas(j.size,j.size);const s=DyePatterns.render(c,j.params,{size:j.size,dyed:j.dyed});const b=c.transferToImageBitmap();self.postMessage({id:j.id,bitmap:b,stats:s},[b]);}catch(e){self.postMessage({id:j.id,error:e.message});}};';
-      const url = URL.createObjectURL(new Blob([DyePatterns.workerSource, handler], { type: 'text/javascript' }));
-      worker = new Worker(url);
-      document.body.dataset.renderBackend = 'worker';
-      URL.revokeObjectURL(url);
-      worker.onmessage = event => {
-        const job = pending.get(event.data.id);
-        if (!job) { event.data.bitmap?.close(); return; }
-        pending.delete(event.data.id);
-        if (event.data.error) job.reject(new Error(event.data.error));
-        else job.resolve(event.data);
-      };
-      worker.onerror = () => {
-        worker?.terminate(); worker = null;
-        document.body.dataset.renderBackend = 'canvas';
-        for (const job of pending.values()) job.reject(new Error('worker unavailable'));
-        pending.clear();
-      };
-    } catch (_) { worker = null; }
-  }
-  async function render(params, size, dyed = true) {
-    if (worker) {
-      try {
-        return await new Promise((resolve, reject) => {
-          const id = ++jobId;
-          pending.set(id, { resolve, reject });
-          worker.postMessage({ id, params: clone(params), size, dyed });
-        });
-      } catch (_) { /* Local file browsers may deny workers; keep the canvas path. */ }
-    }
-    document.body.dataset.renderBackend = 'canvas';
-    await wait(0);
-    const canvas = document.createElement('canvas');
-    const stats = DyePatterns.render(canvas, params, { size, dyed });
-    return { bitmap: canvas, stats };
-  }
-  function draw(target, result) {
-    target.width = result.stats.width; target.height = result.stats.height;
-    target.getContext('2d', { alpha: false }).drawImage(result.bitmap, 0, 0);
-  }
-  function dispose(result) { result?.bitmap?.close?.(); }
   function blank() {
     if (white) draw(fabric, white);
     else { fabric.width = fabric.height = 720; fabric.getContext('2d').fillStyle = '#eeefe5'; fabric.getContext('2d').fillRect(0, 0, 720, 720); }
@@ -809,7 +767,7 @@
       checkpoint();persist();
       // A cached page resumes with the same live Worker and ImageBitmaps.
       if(event.persisted)return;
-      worker?.terminate();worker=null;dispose(white);dispose(prepared);
+      rendering.close();dispose(white);dispose(prepared);
     });
   }
   async function initialize() {
@@ -819,7 +777,7 @@
     try { const saved=localStorage.getItem(storageKey);if(saved)loaded=DyeExperience.readDocument(saved,DyePatterns.normalize);tourVisible=!loaded&&localStorage.getItem(tourKey)!=='done'; }
     catch(_){loadError='未能读取本机草稿，可导入已导出的 JSON 备份。';}
     journal=loaded?new DyeExperience.Journal(loaded.current,loaded.past,loaded.future):new DyeExperience.Journal(snapshot());
-    bind();startWorker();setPhase('tie');blank();
+    bind();rendering.start();setPhase('tie');blank();
     if(loaded){$('enter-label').textContent='接着染';await restoreSnapshot(loaded.current,'已恢复上次的布料与撤销记录，可以接着染。');draftMessage('已恢复本机草稿与历史');}
     if(loadError)draftMessage(loadError,true);
     white=await render(state.params,720,false);
