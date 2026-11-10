@@ -87,7 +87,7 @@
       }
       if (value.reference) {
         const reference = value.reference;
-        if (!['tightness', 'dips', 'radius'].includes(reference.key)) throw new Error('对比参数无效。');
+        if (!['all', 'tightness', 'dips', 'radius'].includes(reference.key)) throw new Error('对比参数无效。');
         result.reference = { key: reference.key, params: params(reference.params) };
         if(reference.target!==undefined){
           if(reference.key!=='radius'||![result.params.technique,...(result.params.layers||[]).map(layer=>layer.technique)].includes(reference.target))throw new Error('对比染法无效。');
@@ -97,7 +97,7 @@
         const expected = copy(result.reference.params);
         if(reference.target)layerFor(expected,reference.target).radius=layerFor(result.params,reference.target).radius;
         else expected[reference.key] = result.params[reference.key];
-        if (!same(expected, result.params)) throw new Error('对比草稿改变了多个参数。');
+        if (reference.key !== 'all' && !same(expected, result.params)) throw new Error('对比草稿改变了多个参数。');
       }
       return result;
     }
@@ -126,7 +126,22 @@
     });
   }
   function reroll(snapshot){const next=copy(snapshot);next.params.seed=(next.params.seed+997)>>>0;next.reference=null;return next;}
-  const api = { Journal, readDocument, same, tutorialStep, layerFor, pendingStitch, rememberLayers, reroll };
+  function toggleTechnique(params, stitch, type, candidate) {
+    const current=copy(params), layers=current.layers||[], selected=[current.technique,...layers.map(p=>p.technique)];
+    if(selected.includes(type)){
+      if(selected.length===1)throw new Error('至少保留一种染法。');
+      if(type===current.technique){
+        const next=layers.shift(), progress=next.technique==='stitch'?(next.stitchProgress??1):0;
+        delete next.stitchProgress;delete next.layers;
+        return {params:{...next,seed:current.seed,tightness:current.tightness,dips:current.dips,layers},stitch:progress};
+      }
+      current.layers=layers.filter(p=>p.technique!==type);return {params:current,stitch};
+    }
+    if(selected.length>=3)throw new Error('最多选择三种染法，请先取消一种。');
+    if(!candidate||candidate.technique!==type)throw new Error('染法参数无效。');
+    current.layers=[...layers,copy(candidate)];return {params:current,stitch};
+  }
+  const api = { toggleTechnique, Journal, readDocument, same, tutorialStep, layerFor, pendingStitch, rememberLayers, reroll };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.DyeExperience = api;
 })(globalThis);

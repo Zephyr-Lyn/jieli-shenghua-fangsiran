@@ -2,25 +2,25 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="application-version" content="1.0.2">
+  <meta name="application-version" content="1.0.3">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#183f63">
   <meta name="description" content="留一处白，让花生长。尝试圆花、条纹、雪花、夹扎、缝花与云雾，亲手留下自己的扎染纹样。">
   <title>结里生花 · 放肆染</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='8' fill='%23244f73'/%3E%3Ccircle cx='24' cy='24' r='13' fill='none' stroke='%23eeefe5' stroke-width='5'/%3E%3Ccircle cx='24' cy='24' r='5' fill='%23eeefe5'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="studio.css">
-  <link rel="stylesheet" href="scatter-studio.css">
-  <link rel="stylesheet" href="home.css">
-  <link rel="stylesheet" href="experience.css">
-  <script defer src="techniques.js"></script>
-  <script defer src="cover-art.js"></script>
-  <script defer src="experience-state.js"></script>
-  <script defer src="artwork.js"></script>
-  <script defer src="render-service.js"></script>
-  <script defer src="app.js"></script>
-  <script defer src="intro.js"></script>
-  <script defer src="scatter.js"></script>
+  <link rel="stylesheet" href="styles.css?v=1.0.3">
+  <link rel="stylesheet" href="studio.css?v=1.0.3">
+  <link rel="stylesheet" href="scatter-studio.css?v=1.0.3">
+  <link rel="stylesheet" href="home.css?v=1.0.3">
+  <link rel="stylesheet" href="experience.css?v=1.0.3">
+  <script defer src="techniques.js?v=1.0.3"></script>
+  <script defer src="cover-art.js?v=1.0.3"></script>
+  <script defer src="experience-state.js?v=1.0.3"></script>
+  <script defer src="artwork.js?v=1.0.3"></script>
+  <script defer src="render-service.js?v=1.0.3"></script>
+  <script defer src="app.js?v=1.0.3"></script>
+  <script defer src="intro.js?v=1.0.3"></script>
+  <script defer src="scatter.js?v=1.0.3"></script>
 </head>
 <body data-view="landing">
   <section class="landing" id="landing" aria-labelledby="landing-title">
@@ -63,14 +63,14 @@
         <details class="draft-menu"><summary>草稿与帮助</summary><div class="draft-menu-body"><span id="draft-status" role="status">草稿仅存本机</span><div class="draft-actions"><button type="button" id="export-draft">导出草稿</button><button type="button" id="import-draft">导入草稿</button><input type="file" id="draft-file" accept=".json,application/json" hidden><button type="button" id="tour-open">操作引导</button><button type="button" id="restart" title="恢复默认圆花，可撤销找回当前方案">全部重新开始</button></div><p class="storage-note">草稿和最近100步历史自动保存在此浏览器。清理网站数据前，可导出JSON备份当前布料。</p></div></details>
       </section>
       <section class="technique-picker" aria-labelledby="picker-title">
-        <div class="picker-heading"><h2 id="picker-title">单独使用一种</h2><span>卡片单独使用一种；组合请在工具区勾选。</span></div>
-        <div class="technique-shelf" role="group" aria-label="单独使用一种染法">
-          <button type="button" class="technique-choice" data-technique="circle" aria-label="单独使用圆花" aria-pressed="true"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>圆花</strong><small>单独使用</small></span></button>
-          <button type="button" class="technique-choice" data-technique="stripe" aria-label="单独使用条纹" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>条纹</strong><small>单独使用</small></span></button>
-          <button type="button" class="technique-choice" data-technique="snowflake" aria-label="单独使用雪花" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>雪花</strong><small>单独使用</small></span></button>
-          <button type="button" class="technique-choice" data-technique="clamp" aria-label="单独使用夹扎" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>夹扎</strong><small>单独使用</small></span></button>
-          <button type="button" class="technique-choice" data-technique="stitch" aria-label="单独使用缝花" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>缝花</strong><small>单独使用</small></span></button>
-          <button type="button" class="technique-choice" data-technique="cloud" aria-label="单独使用云雾" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>云雾</strong><small>单独使用</small></span></button>
+        <div class="picker-heading"><h2 id="picker-title">选择染法 · 最多三种</h2><span>卡片选择染法 · 最多三种；组合请在工具区勾选。</span></div>
+        <div class="technique-shelf" role="group" aria-label="选择一种或多种染法">
+          <button type="button" class="technique-choice" data-technique="circle" aria-label="单独使用圆花" aria-pressed="true"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>圆花</strong><small>点击选择／取消</small></span></button>
+          <button type="button" class="technique-choice" data-technique="stripe" aria-label="单独使用条纹" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>条纹</strong><small>点击选择／取消</small></span></button>
+          <button type="button" class="technique-choice" data-technique="snowflake" aria-label="单独使用雪花" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>雪花</strong><small>点击选择／取消</small></span></button>
+          <button type="button" class="technique-choice" data-technique="clamp" aria-label="单独使用夹扎" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>夹扎</strong><small>点击选择／取消</small></span></button>
+          <button type="button" class="technique-choice" data-technique="stitch" aria-label="单独使用缝花" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>缝花</strong><small>点击选择／取消</small></span></button>
+          <button type="button" class="technique-choice" data-technique="cloud" aria-label="单独使用云雾" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>云雾</strong><small>点击选择／取消</small></span></button>
         </div>
       </section>
       <section class="first-dye" id="first-dye" aria-label="操作引导" hidden>
@@ -165,15 +165,15 @@
               <button type="button" class="primary-button" id="primary-action">收好线结，浸入靛蓝 <span aria-hidden="true">↓</span></button>
             </div>
             <div class="guide-toggle" id="guide-control" hidden><label><input type="checkbox" id="show-guides">看看刚才留下的痕迹</label></div>
-            <div class="compare-entry" id="compare-entry" hidden><label for="compare-key">保留这一张，只改一个地方</label><select id="compare-key"><option value="tightness">比较松紧</option><option value="dips">比较染色深浅</option><option value="radius">比较纹样大小／宽度</option></select><button type="button" id="start-compare">保留这张，开始对比</button></div>
+            <div class="compare-entry" id="compare-entry" hidden><label >保留前图，自由调整再对比</label><button type="button" id="start-compare">保留这张，开始对比</button></div>
             <p class="tool-footnote" id="knot-help">点击布面添线结，拖动调整位置；选中后也可用方向键移动。</p>
           </aside>
         </div>
       </section>
       <section class="comparison" id="comparison" aria-labelledby="compare-title" hidden>
-        <header><div><span class="compare-kicker">同一块布 · 一次只改一个参数</span><h2 id="compare-title">看看变化从哪里来</h2><p id="compare-summary"></p></div><button type="button" id="end-compare" data-end-comparison>退出对比，保留当前布</button></header>
-        <p class="compare-lock" id="compare-lock">对比期间，其余参数、线结位置与底纹固定。结束对比后可以自由调整。</p>
-        <div class="compare-grid"><figure><canvas id="reference-canvas" width="360" height="360" role="img" aria-label="对比前保留的花纹"></canvas><figcaption><strong>A · 保留的这一张</strong><span id="reference-label"></span></figcaption></figure><figure><div class="comparison-current"><canvas id="comparison-canvas" width="360" height="360" role="img" aria-label="本次单参数调整后的花纹" hidden></canvas><p id="compare-waiting">调好参数，浸染并展开后，在这里比较。</p></div><figcaption><strong>B · 这次的变化</strong><span id="comparison-label"></span></figcaption></figure></div>
+        <header><div><span class="compare-kicker">前后效果 · 自由调整</span><h2 id="compare-title">看看变化从哪里来</h2><p id="compare-summary"></p></div><button type="button" id="end-compare" data-end-comparison>退出对比，保留当前布</button></header>
+        <p class="compare-lock" id="compare-lock">前图保持不变，当前作品可同时调整多个参数、位置与染法。结束对比后可以自由调整。</p>
+        <div class="compare-grid"><figure><canvas id="reference-canvas" width="360" height="360" role="img" aria-label="对比前保留的花纹"></canvas><figcaption><strong>A · 保留的这一张</strong><span id="reference-label"></span></figcaption></figure><figure><div class="comparison-current"><canvas id="comparison-canvas" width="360" height="360" role="img" aria-label="本次调整后的花纹" hidden></canvas><p id="compare-waiting">调好参数，浸染并展开后，在这里比较。</p></div><figcaption><strong>B · 这次的变化</strong><span id="comparison-label"></span></figcaption></figure></div>
         <p class="compare-feedback" id="compare-status" role="status"></p>
       </section>
       <section class="observation" aria-label="观察与工艺来源">

@@ -88,7 +88,8 @@
   let sampleTimer = 0, sampleRevision = 0, comparisonRevision = 0, saveTimer = 0;
   let tourVisible = false;
   const stablePhase = () => ['tie','dye','unfold'].includes(state.phase);
-  const locked = key => Boolean(reference && reference.key !== key);
+  const constrained = () => Boolean(reference && reference.key !== 'all');
+  const locked = key => Boolean(constrained() && reference.key !== key);
   function snapshot() {
     return { params: clone(state.params), stitch: state.stitch, selected: state.selected, phase: state.phase,
       guides: state.guides, drafts: clone([...drafts]), reference: clone(reference), ...(state.editing?{editing:state.editing}:{}), ...(layerCache.size?{layerCache:clone([...layerCache])}:{}) };
@@ -129,7 +130,7 @@
   async function restoreSnapshot(saved, message) {
     cancelWork(); restoring = true; sampleRevision++; comparisonRevision++;
     state.params = clone(saved.params); state.stitch = saved.stitch; state.editing=saved.editing; state.selected = saved.selected;
-    state.guides = saved.guides; reference = clone(saved.reference);
+    state.guides = saved.guides; reference = saved.reference ? {key:'all',params:clone(saved.reference.params)} : null;
     drafts.clear(); for (const [key, value] of saved.drafts) drafts.set(key, clone(value));
     layerCache.clear();for(const [key,value] of saved.layerCache||[])layerCache.set(key,clone(value));
     const target = saved.phase;
@@ -170,12 +171,13 @@
     if (saved) { dirty = true; restoreSnapshot(saved, direction === 'undo' ? '已撤销，参数和布料状态已恢复。' : '已重做这一步。'); }
   }
   function parameterLabel(params, key) {
+    if(key==='all'){const r=DyeArtwork.recipe(params);return r.layers.map(p=>p.name+'：'+p.detail).join('；')+'；'+r.shared+'；纹理编号'+r.seed;}
     if(key==='radius')params=DyeExperience.layerFor(params,reference?.target);
     return key === 'tightness' ? '松紧 ' + Math.round(params.tightness * 100) + ' · ' + bindingName(params.tightness) :
       key === 'dips' ? params.dips + ' 遍 · ' + dyeDepthNames[params.dips - 1] :
       modes[params.technique].radius + ' ' + Math.round(params.radius * 100);
   }
-  const comparedValue = params => reference.key==='radius'?DyeExperience.layerFor(params,reference.target).radius:params[reference.key];
+  const comparedValue = params => reference.key==='all'?JSON.stringify(params):reference.key==='radius'?DyeExperience.layerFor(params,reference.target).radius:params[reference.key];
   function queueSample() {
     clearTimeout(sampleTimer); const ticket = ++sampleRevision;
     $('parameter-sample').hidden = state.phase !== 'tie';
@@ -199,7 +201,7 @@
     $('compare-entry').hidden = state.phase !== 'unfold' || Boolean(reference);
     if (!reference) return;
     const before = clone(reference.params), after = clone(state.params), key = reference.key;
-    $('compare-summary').textContent = '本次只比较：' + (key === 'tightness' ? '松紧' : key === 'dips' ? '染色深浅' : modes[DyeExperience.layerFor(after,reference.target).technique].radius) + '。线结位置与底纹保持一致。';
+    $('compare-summary').textContent = '前图固定保留，当前作品可自由调整染法、位置与多个参数。';
     $('reference-label').textContent = parameterLabel(before, key);
     $('comparison-label').textContent = parameterLabel(after, key);
     const revealed = state.phase === 'unfold';
@@ -210,7 +212,7 @@
       if (ticket === comparisonRevision) {
         draw($('reference-canvas'), results[0]);
         if (results[1]) draw($('comparison-canvas'), results[1]);
-        if (revealed) $('compare-status').textContent = comparedValue(before) === comparedValue(after) ? '参数还没有变化，两张花纹应当相同。回到白布，改一处再试。' : '这里只改变了' + (key === 'dips' ? '浸染遍数' : key === 'tightness' ? '松紧' : meta().radius) + '，可以对照观察留白与色晕。';
+        if (revealed) $('compare-status').textContent = comparedValue(before) === comparedValue(after) ? '参数没有变化，两张花纹应当相同。' : '前后完整配方已列出，可同时观察多个调整带来的变化。';
       }
       results.forEach(dispose);
     } catch (_) { if (ticket === comparisonRevision) $('compare-status').textContent = '对比图未生成，请结束对比后重试；当前布料仍保留。'; }
@@ -219,25 +221,25 @@
     $('compare-tip').hidden = !reference;
     $('leave-comparison').hidden = !reference;
     if (reference) {
-      $('compare-tip-text').textContent = '本次只调整' + (reference.key === 'dips' ? '浸染遍数' : reference.key === 'tightness' ? '松紧' : meta().radius) + '，其余条件已固定。';
+      $('compare-tip-text').textContent = '前图已保留，所有参数均可调整，完成后展开查看前后效果。';
       $('controls').setAttribute('aria-describedby','compare-tip');
-      $('canvas-hint').textContent = state.phase === 'tie' ? '对比中：布面位置固定，请调整开放的参数' : $('canvas-hint').textContent;
-      cloth.setAttribute('aria-label','对比中的布面，线结位置已固定');
-      $('knot-help').textContent = '对比期间布面不可移动，结束对比后即可自由调整。';
+      if(constrained())$('canvas-hint').textContent='对比中：位置已固定';
+      if(constrained())cloth.setAttribute('aria-label','对比中的布面，线结位置已固定');
+      $('knot-help').textContent = '可自由调整位置和参数，前图始终保留。';
     } else $('controls').removeAttribute('aria-describedby');
     for (const key of ['radius','tightness','density']) $(key).disabled = locked(key);
-    for (const key of ['angle','petals','shape','motif']) $('method-' + key).disabled = Boolean(reference);
-    $('remove-point').disabled = Boolean(reference) || activeParams().points.length <= 1;
+    for (const key of ['angle','petals','shape','motif']) $('method-' + key).disabled = constrained();
+    $('remove-point').disabled = constrained() || activeParams().points.length <= 1;
     document.querySelectorAll('[data-dips]').forEach(button => { button.disabled = locked('dips'); });
     // Switching technique or cloth exits comparison in the same undoable action.
     document.querySelectorAll('.technique-choice').forEach(button => { button.disabled = importing; });
     $('reset').disabled = importing;
     $('restart').disabled = importing;
     document.querySelectorAll('[data-end-comparison]').forEach(button => { button.disabled = importing; });
-    cloth.tabIndex = state.phase==='unfold'||(state.phase === 'tie' && manyPoints() && !reference) ? 0 : -1;
+    cloth.tabIndex = state.phase==='unfold'||(state.phase === 'tie' && manyPoints() && !constrained()) ? 0 : -1;
     if(state.phase==='unfold'){cloth.setAttribute('role','button');cloth.setAttribute('aria-haspopup','dialog');cloth.setAttribute('aria-label',compositionName()+'成品，点击放大查看');}
     else{cloth.removeAttribute('role');cloth.removeAttribute('aria-haspopup');}
-    handles.querySelectorAll('button').forEach(button => { if (reference) button.disabled = true; });
+    handles.querySelectorAll('button').forEach(button => { if (constrained()) button.disabled = true; });
     const extras=state.params.layers||[], selected=[state.params.technique,...extras.map(layer=>layer.technique)];
     document.querySelectorAll('[data-mix]').forEach(input=>{
       const type=input.dataset.mix, main=type===state.params.technique;
@@ -261,14 +263,14 @@
     $('first-dye').hidden = !tourVisible;
     if (!tourVisible) return;
     if (reference) {
-      $('tour-count').textContent = '参数对比 · 一次只改一处';
+      $('tour-count').textContent = '前后效果对比';
       $('tour-title').textContent = state.phase === 'unfold' ? '两张布都展开了，看看哪里不同。' : '原来的那张已保留，可以放心试。';
-      $('tour-text').textContent = '本次只开放' + (reference.key === 'dips' ? '浸染遍数' : reference.key === 'tightness' ? '松紧' : meta().radius) + '。调整后浸染、展开，在页面下方查看对比；结束对比即可自由编辑。';
+      $('tour-text').textContent = '前图固定保留。可同时修改多个参数、位置与染法，再浸染展开查看。';
       $('tour-skip').textContent = '收起引导'; return;
     }
     const step = DyeExperience.tutorialStep({...state,params:activeParams(),stitch:getStitch()}, DyePatterns.defaults(activeParams().technique));
     const titles = ['在布面上，留下一处痕迹。', '调一调松紧，看小样怎样变。', '准备好了，把布浸入靛蓝。', '拆开束缚，看看你的花纹。', '第一块布，完成了。'];
-    const descriptions = [activeParams().technique === 'stitch' ? '沿虚线缝一针，或点击主按钮帮你缝好一圈。' : manyPoints() ? '点白布添一个结，或挪动已有标记；也可以用回车和方向键操作。' : '挪动布面上的标记，改变花纹布局；选中标记后也可以用方向键操作。', '找到松紧滑杆，试着往左或往右调。旁边的小样会显示预计效果。', '点击制作主按钮进入浸染。每一步都可以撤销，不必担心试错。', '点击“拆开束缚，展开花纹”。完成后可以保存图片，也可以只改一个参数做对比。', '你可以保存作品，或保留这一张，再比较松紧和染色深浅。'];
+    const descriptions = [activeParams().technique === 'stitch' ? '沿虚线缝一针，或点击主按钮帮你缝好一圈。' : manyPoints() ? '点白布添一个结，或挪动已有标记；也可以用回车和方向键操作。' : '挪动布面上的标记，改变花纹布局；选中标记后也可以用方向键操作。', '找到松紧滑杆，试着往左或往右调。旁边的小样会显示预计效果。', '点击制作主按钮进入浸染。每一步都可以撤销，不必担心试错。', '点击“拆开束缚，展开花纹”。完成后可以保存图片，也可以自由调整多个参数后做对比。', '你可以保存作品，或保留这一张，再比较松紧和染色深浅。'];
     $('tour-count').textContent = step === 4 ? '第一次染 · 已完成' : '第一次染 · ' + (step + 1) + ' / 4';
     $('tour-title').textContent = titles[step]; $('tour-text').textContent = descriptions[step];
     $('tour-skip').textContent = step === 4 ? '知道了' : '跳过引导';
@@ -348,7 +350,7 @@
     $('tightness').setAttribute('aria-valuetext', bindingName(shared.tightness) + (shared.tightness < .45 ? '，渗色更多，留白更细' : shared.tightness > .65 ? '，留白更宽，边缘更清楚' : '，留白与色晕适中'));
     for (const key of ['angle','petals','shape','motif']) $('method-' + key).value = p[key];
     document.querySelectorAll('[data-dips]').forEach(button => button.setAttribute('aria-pressed', String(Number(button.dataset.dips) === shared.dips)));
-    document.querySelectorAll('.technique-choice').forEach(button => button.setAttribute('aria-pressed', String(!state.params.layers?.length&&button.dataset.technique === state.params.technique)));
+    document.querySelectorAll('.technique-choice').forEach(button => {const selected=[state.params.technique,...(state.params.layers||[]).map(p=>p.technique)].includes(button.dataset.technique);button.setAttribute('aria-pressed',String(selected));button.setAttribute('aria-label',modes[button.dataset.technique].name+'，'+(selected?'已选，点击取消':'点击添加'));});
     $('local-params-title').textContent=m.name+'参数';
     cloth.classList.toggle('show-guides', state.guides);
     $('show-guides').checked = state.guides;
@@ -419,8 +421,8 @@
       const point=manyPoints()?p.points[i]:p;
       button.style.left=point.x*100+'%'; button.style.top=point.y*100+'%';
       button.classList.toggle('selected',i===state.selected);
-      button.tabIndex=state.phase==='tie'&&!reference?0:-1;
-      button.disabled=state.phase!=='tie'||state.sewing||Boolean(reference);
+      button.tabIndex=state.phase==='tie'&&!constrained()?0:-1;
+      button.disabled=state.phase!=='tie'||state.sewing||constrained();
       button.setAttribute('aria-label',p.technique==='stitch'?'针尖，沿轮廓拖动，或按回车缝一针':(p.technique==='cloud'?'褶团':p.technique==='clamp'?'夹板布局':'扎点')+' '+(i+1)+'，左右'+Math.round(point.x*100)+'%，上下'+Math.round(point.y*100)+'%，可用方向键移动');
     });
     updateStitchProgress();
@@ -447,7 +449,7 @@
     cloth.style.setProperty('--fold-x',m.fold[0]); cloth.style.setProperty('--fold-y',m.fold[1]);
     stage.setAttribute('aria-busy',String(busy));
     $('controls').disabled=phase!=='tie'||state.sewing;
-    $('controls').hidden=revealed;
+    $('controls').hidden=phase!=='tie';
     $('result-notes').hidden=!revealed;
     $('download').hidden=phase!=='unfold';
     $('open-poster').hidden=phase!=='unfold';
@@ -457,7 +459,7 @@
     $('stage-meta').textContent=state.params.layers?.length?compositionName():m.name+' · '+m.craft;
     $('method-caption').textContent=revealed?'属于你的这一块':m.craft;
     $('tool-title').textContent=revealed?'你的这一染。':phase==='dye'?'等一次花开。':compositionName();
-    $('tool-description').textContent=revealed?(reference?'A图已经保留。可以再调一次对比参数，也可以退出对比自由编辑。':'保存这块布，或保留当前参数继续调整。下方还可以只改一个参数做对比。'):phase==='dye'?'束缚还在，花纹藏在布里。松开它们，看看这次留下了什么。':m.description;
+    $('tool-description').textContent=revealed?(reference?'A图已经保留。可以再调一次对比参数，也可以退出对比自由编辑。':'保存这块布，或保留当前参数继续调整。下方还可以自由调整多个参数后做对比。'):phase==='dye'?'束缚还在，花纹藏在布里。松开它们，看看这次留下了什么。':m.description;
     $('stage-title').textContent=phase==='tie'?m.name+' · 处理白布':phase==='dyeing'?'正在浸染靛蓝':phase==='dye'?'染好了，花纹尚未展开':phase==='previewing'?'正在生成花纹':compositionName()+' · 你的这一次染';
     $('canvas-hint').textContent=phase==='tie'?m.hint:phase==='dye'?'轻轻拆开，让花纹展开':revealed?'留白与色晕，记下了你刚才的选择':'让靛蓝进入布面';
     $('stage-bottom').hidden=busy;
@@ -473,7 +475,7 @@
       for(const p of r.layers.filter(p=>p.position)){const line=document.createElement('p');line.textContent=p.name+' · '+p.position;details.append(line);}
       const note=document.createElement('p');note.textContent='纹理编号 '+r.seed+'。大小、密度与松紧均为相对值；位置以画布宽高百分比表示。';details.append(note);$('recipe-positions')?.remove();details.id='recipe-positions';$('result-notes').append(details);
     }
-    $('knot-help').textContent=revealed?'保存花纹，或回到白布，只改一个地方再试。':phase==='dye'?'下一步，亲手拆开，看看花纹。':busy?'正在为这次展开准备花纹。':activeParams().technique==='stitch'?'可以沿虚线拖动针尖，也可以点击上方按钮缝一圈。针尖支持回车逐针前进。':manyPoints()?'点击布面添一处，选中标记后可用方向键移动。白布支持回车添点。':'拖动布上的标记调整位置，也可以用方向键移动。';
+    $('knot-help').textContent=revealed?'保存花纹，或回到白布，继续调整再试。':phase==='dye'?'下一步，亲手拆开，看看花纹。':busy?'正在为这次展开准备花纹。':activeParams().technique==='stitch'?'可以沿虚线拖动针尖，也可以点击上方按钮缝一圈。针尖支持回车逐针前进。':manyPoints()?'点击布面添一处，选中标记后可用方向键移动。白布支持回车添点。':'拖动布上的标记调整位置，也可以用方向键移动。';
     $('knot-help').hidden=revealed;
     cloth.tabIndex=phase==='tie'&&manyPoints()?0:-1;
     cloth.setAttribute('aria-label',phase==='tie'?(manyPoints()?'白布，点击空白处或按回车添加'+(activeParams().technique==='cloud'?'褶团':'线结'):'扎染布面，可调整布面标记'):revealed?m.name+'扎染成品':phase==='dye'?'已浸染、等待展开的布料':'正在制作的布料');
@@ -520,7 +522,7 @@
   function selectTechnique(type) {
     if(!modes[type]||type===activeParams().technique||importing)return;
     if([state.params.technique,...(state.params.layers||[]).map(layer=>layer.technique)].includes(type)){
-      checkpoint();cancelWork();restoring=false;reference=null;state.editing=type;state.selected=0;state.guides=false;
+      checkpoint();cancelWork();restoring=false;reference=reference?.key==='all'?reference:null;state.editing=type;state.selected=0;state.guides=false;
       setPhase('tie');blank();checkpoint();announce('正在编辑'+meta().name+'，其他染法和参数仍保留。');return;
     }
     return;
@@ -535,7 +537,7 @@
     if(message)announce(message);
   }
   function movePoint(x,y) {
-    if(reference)return;
+    if(constrained())return;
     const bound=value=>Math.max(.16,Math.min(.84,value));
     const p=activeParams();
     if(manyPoints())p.points[state.selected]={x:bound(x),y:bound(y)};
@@ -544,7 +546,7 @@
   }
   function addPoint(x,y) {
     const p=activeParams();
-    if(reference||!manyPoints()||p.points.length>=6)return false;
+    if(constrained()||!manyPoints()||p.points.length>=6)return false;
     if(x===undefined) {
       const options=[[.72,.27],[.25,.75],[.5,.5],[.77,.76],[.24,.25],[.5,.23],[.48,.8]];
       const best=options.sort((a,b)=>Math.min(...p.points.map(p=>Math.hypot(b[0]-p.x,b[1]-p.y)))-Math.min(...p.points.map(p=>Math.hypot(a[0]-p.x,a[1]-p.y))))[0];
@@ -561,7 +563,7 @@
     const box=cloth.getBoundingClientRect();return{x:(event.clientX-box.left)/box.width,y:(event.clientY-box.top)/box.height};
   }
   function sewAt(point) {
-    if(reference||!stitchSamples.length)return;
+    if(constrained()||!stitchSamples.length)return;
     let closest=null,distance=Infinity;
     for(const sample of stitchSamples){const d=Math.hypot(sample.x-point.x,sample.y-point.y);if(d<distance){distance=d;closest=sample;}}
     if(distance<.13&&closest.t<=getStitch()+.16&&closest.t>=getStitch()-.03){
@@ -657,26 +659,23 @@
     $('artwork-viewer').addEventListener('close',()=>{viewerTicket++;const target=viewerOpener?.isConnected&&viewerOpener!==document.body?viewerOpener:$('view-artwork');target.focus({preventScroll:true});});
     window.addEventListener('resize',()=>{if($('artwork-viewer').open)viewerLayout();});
     function changeCombination(type,checked) {
-      if(importing||type===state.params.technique)return;
-      checkpoint();
-      const wasComparing=Boolean(reference);
-      const layers=clone(state.params.layers||[]).filter(layer=>layer.technique!==type);
-      if(checked&&layers.length>=2){updateLocks();announce('一次最多三种染法，请先取消一种叠加。');return;}
-      rememberCurrentLayers();
-      if(checked)layers.push(cachedLayer(type));
-      cancelWork();restoring=false;reference=null;
-      state.params=DyePatterns.normalize({...state.params,layers});
-      if(![state.params.technique,...layers.map(layer=>layer.technique)].includes(state.editing))state.editing=undefined;
-      setPhase('tie');blank();checkpoint();
-      announce((wasComparing?'已退出单参数对比。':'')+'当前染法：'+compositionName()+'。取消的染法参数已暂存，重新勾选会接着使用。');
+      if(importing)return;
+      let next;try{next=DyeExperience.toggleTechnique(state.params,state.stitch,type,cachedLayer(type));}catch(error){updateLocks();announce(error.message);return;}
+      checkpoint();rememberCurrentLayers();cancelWork();restoring=false;
+      reference=reference?.key==='all'?reference:null;
+      state.params=DyePatterns.normalize(next.params);state.stitch=next.stitch;
+      const selected=[state.params.technique,...(state.params.layers||[]).map(p=>p.technique)];
+      if(!selected.includes(state.editing))state.editing=undefined;
+      state.selected=0;setPhase('tie');blank();checkpoint();
+      announce('已选 '+selected.length+' / 3：'+compositionName()+'。再次点击卡片可取消，参数会保留。');
     }
     document.querySelectorAll('[data-mix]').forEach(input=>input.addEventListener('change',()=>changeCombination(input.dataset.mix,input.checked)));
     $('clear-mix').addEventListener('click',()=>{
       if(importing||!state.params.layers?.length)return;
-      checkpoint();rememberCurrentLayers();cancelWork();restoring=false;reference=null;delete state.params.layers;state.editing=undefined;
+      checkpoint();rememberCurrentLayers();cancelWork();restoring=false;reference=reference?.key==='all'?reference:null;delete state.params.layers;state.editing=undefined;
       setPhase('tie');blank();checkpoint();announce('已回到'+meta().name+'单一染法，可撤销找回组合。');
     });
-    document.querySelectorAll('.technique-choice').forEach(button=>button.addEventListener('click',()=>useSingleTechnique(button.dataset.technique)));
+    document.querySelectorAll('.technique-choice').forEach(button=>button.addEventListener('click',()=>changeCombination(button.dataset.technique)));
     for(const key of ['angle','petals','shape','motif'])$('method-'+key).addEventListener('change',event=>{
       if(state.phase!=='tie'||state.sewing||locked(key))return;
       activeParams()[key]=['shape','motif'].includes(key)?event.target.value:Number(event.target.value);
@@ -696,11 +695,11 @@
     for(const key of ['radius','tightness','density'])$(key).addEventListener('change',checkpoint);
     $('remove-point').addEventListener('click',()=>{removePoint();checkpoint();});
     cloth.addEventListener('keydown',event=>{
-      if(event.target!==cloth||state.phase!=='tie'||!manyPoints()||reference)return;
+      if(event.target!==cloth||state.phase!=='tie'||!manyPoints()||constrained())return;
       if(['Enter',' '].includes(event.key)){event.preventDefault();addPoint();checkpoint();handles.children[state.selected]?.focus({preventScroll:true});}
     });
     cloth.addEventListener('pointerdown',event=>{
-      if(state.phase!=='tie'||state.sewing||reference||event.button>0||state.pointer!==null)return;
+      if(state.phase!=='tie'||state.sewing||constrained()||event.button>0||state.pointer!==null)return;
       event.preventDefault();state.pointer=event.pointerId;cloth.setPointerCapture(event.pointerId);
       const point=pointerPosition(event),handle=event.target.closest('.fabric-handle');
       if(activeParams().technique==='stitch'){sewAt(point);handles.firstElementChild?.focus({preventScroll:true});return;}
@@ -748,10 +747,9 @@
     $('draft-file').addEventListener('change',event=>importDraft(event.target.files[0]));
     $('start-compare').addEventListener('click',()=>{
       if(state.phase!=='unfold'||reference)return;
-      const key=$('compare-key').value;
-      reference={key,params:clone(state.params),...(key==='radius'?{target:activeParams().technique}:{})};edit();
-      announce('已保留上一张。对比期间只开放'+(reference.key==='dips'?'浸染遍数':reference.key==='tightness'?'松紧':meta().radius)+'，其他条件固定。');
-      if(matchMedia('(max-width: 779px)').matches){const target=reference.key==='dips'?document.querySelector('[data-dips][aria-pressed="true"]'):$(reference.key);target.focus({preventScroll:true});target.scrollIntoView({block:'center',behavior:'instant'});}
+      const key='all';
+      reference={key,params:clone(state.params)};edit();
+      announce('前图已保留，当前作品可自由调整多个参数、位置和染法。');
     });
     document.querySelectorAll('[data-end-comparison]').forEach(button=>button.addEventListener('click',()=>{
       if(!reference||importing)return;

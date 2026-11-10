@@ -1,4 +1,14 @@
 /* Experience additions use the existing indigo, cotton and cinnabar palette. */
+.scatter-studio[data-phase="dye"] .technique-picker,
+.scatter-studio[data-phase="dyeing"] .technique-picker,
+.scatter-studio[data-phase="unfolding"] .technique-picker,
+.scatter-studio[data-phase="dye"] .mix-panel,
+.scatter-studio[data-phase="dyeing"] .mix-panel,
+.scatter-studio[data-phase="unfolding"] .mix-panel,
+.scatter-studio[data-phase="dye"] .layer-editor,
+.scatter-studio[data-phase="dyeing"] .layer-editor,
+.scatter-studio[data-phase="unfolding"] .layer-editor { display: none !important; }
+.compare-grid figcaption span { overflow-wrap: anywhere; white-space: normal; }
 .scatter-studio[data-phase="unfold"] .technique-picker,
 .scatter-studio[data-phase="unfold"] .mix-panel,
 .scatter-studio[data-phase="unfold"] .layer-editor { display: none !important; }
