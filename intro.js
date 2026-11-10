@@ -71,7 +71,7 @@
     document.querySelector('meta[name="theme-color"]').content = '#f0f3f1';
     status.textContent = visited ? '已经回到染布台。' : '染布台已铺好。先挑一种染法，再动手处理布料。';
     if (visited) window.scrollTo({ top: workScroll, behavior: 'instant' });
-    else if (window.innerWidth >= 780) document.getElementById('workspace').scrollIntoView({ block: 'start', behavior: 'instant' });
+    else if (window.innerWidth >= 780) document.getElementById('canvas-workspace').scrollIntoView({ block: 'start', behavior: 'instant' });
     else window.scrollTo({ top: 0, behavior: 'instant' });
     document.getElementById('stage-title').focus({ preventScroll: true });
     visited = true;
