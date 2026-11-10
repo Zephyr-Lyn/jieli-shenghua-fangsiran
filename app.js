@@ -245,7 +245,7 @@
       input.disabled=importing||main||(!input.checked&&selected.length>=3);
       input.nextElementSibling.textContent=modes[type].name+(main?' · 主染法':'');
     });
-    $('mix-summary').textContent=extras.length?compositionName()+' · 组合':'组合染法（试验）';
+    $('mix-summary').textContent=extras.length?compositionName()+' · 组合':'组合染法';
     $('mix-limit').textContent=extras.length?'已选 '+selected.length+' / 3：'+compositionName()+'。可取消勾选叠加染法。':'当前为单一染法。';
     $('clear-mix').disabled=importing||!extras.length;
     $('clear-mix').textContent='仅保留'+modes[state.params.technique].name;

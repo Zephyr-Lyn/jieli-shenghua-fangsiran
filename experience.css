@@ -176,3 +176,30 @@
 @media (max-width: 779px) and (max-height: 420px) {
   .scatter-studio .cloth-stage { --cloth-size: min(77vw, max(180px, calc(100dvh - 150px))); }
 }
+
+/* The cloth owns the main workspace; the recipe scrolls within its own pane. */
+@media (min-width: 780px) {
+  .scatter-studio { --studio-tools: clamp(280px, 28vw, 360px); }
+  .scatter-studio .intro { min-height: 0; padding-block: 8px 16px; }
+  .scatter-studio .intro h1 { font-size: 40px; transform: none; }
+  .scatter-studio .bench-grid { height: calc(100dvh - 88px); min-height: 380px; gap: 24px; }
+  .scatter-studio .stage-panel { min-height: 0; height: 100%; display: flex; flex-direction: column; }
+  .scatter-studio .cloth-stage {
+    --cloth-size: min(calc(100% - 44px), max(200px, calc(100dvh - 230px)), 680px);
+    min-height: 0; flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 16px 22px 44px;
+  }
+  .scatter-studio .cloth-arrival { width: min(100%, max(200px, calc(100dvh - 230px)), 680px); max-width: 100%; flex-shrink: 1; }
+  .scatter-studio .cloth,.scatter-studio .cloth[data-folded="false"] { width: 100%; height: auto; aspect-ratio: 1; flex-shrink: 0; }
+  .scatter-studio .tools {
+    top: 0; height: 100%; min-height: 0; max-height: 100%; margin: 0;
+    box-sizing: border-box; transform: none; overflow-y: auto; overflow-x: hidden;
+    overscroll-behavior-y: contain; scrollbar-gutter: stable;
+  }
+  .scatter-studio .tools::before { display: none; }
+  .scatter-studio .steps { width: calc(100% - var(--studio-tools) - 24px); }
+  .scatter-studio .technique-picker { width: calc(100% - var(--studio-tools) - 24px); }
+  .scatter-studio .first-dye { width: calc(100% - var(--studio-tools) - 24px); }
+  .scatter-studio .tools:focus-visible { outline: 3px solid #b64236; outline-offset: 3px; }
+  .scatter-studio .tool-heading h2 { overflow-wrap: anywhere; }
+}

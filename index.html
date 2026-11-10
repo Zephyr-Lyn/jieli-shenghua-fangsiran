@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="application-version" content="1.0.1">
+  <meta name="application-version" content="1.0.2">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#183f63">
   <meta name="description" content="留一处白，让花生长。尝试圆花、条纹、雪花、夹扎、缝花与云雾，亲手留下自己的扎染纹样。">
@@ -101,9 +101,9 @@
             </div>
             <div class="stage-footer"><p id="live-summary" role="status" aria-live="polite">每个结，都会留下自己的圆花。</p><span id="render-status" aria-hidden="true">你的每一步，都在布里</span></div>
           </section>
-          <aside class="tools" aria-label="扎染工具">
+          <aside class="tools" aria-label="扎染工具" tabindex="0">
             <div class="tool-heading"><p class="method-caption" id="method-caption">多点捆扎</p><h2 id="tool-title">圆花</h2><p id="tool-description">捏起布料，用线扎紧。每一处线结，都会留下自己的圆花。</p></div>
-            <details class="mix-panel" id="mix-panel"><summary id="mix-summary">组合染法（试验）</summary><p id="mix-note">最多选三种。选好组合后，点击“编辑圆花”等按钮分别调整位置和专属参数。松紧、染次作用于整块布，辅助线显示当前编辑的染法。取消后再勾选，会保留之前的参数。</p><div class="mix-options" role="group" aria-label="选择同时作用的染法" aria-describedby="mix-note"><label><input type="checkbox" data-mix="circle"><span>圆花</span></label><label><input type="checkbox" data-mix="stripe"><span>条纹</span></label><label><input type="checkbox" data-mix="snowflake"><span>雪花</span></label><label><input type="checkbox" data-mix="clamp"><span>夹扎</span></label><label><input type="checkbox" data-mix="stitch"><span>缝花</span></label><label><input type="checkbox" data-mix="cloud"><span>云雾</span></label></div><button type="button" id="clear-mix" disabled>仅保留主染法</button><p class="mix-limit" id="mix-limit" role="status">当前为单一染法。</p><p class="mix-model">试验会合并各染法的留白区域，属于二维视觉模拟，尚未用实物复合染色校准。</p></details>
+            <details class="mix-panel" id="mix-panel"><summary id="mix-summary">组合染法</summary><p id="mix-note">最多选三种。选好组合后，点击“编辑圆花”等按钮分别调整位置和专属参数。松紧、染次作用于整块布，辅助线显示当前编辑的染法。取消后再勾选，会保留之前的参数。</p><div class="mix-options" role="group" aria-label="选择同时作用的染法" aria-describedby="mix-note"><label><input type="checkbox" data-mix="circle"><span>圆花</span></label><label><input type="checkbox" data-mix="stripe"><span>条纹</span></label><label><input type="checkbox" data-mix="snowflake"><span>雪花</span></label><label><input type="checkbox" data-mix="clamp"><span>夹扎</span></label><label><input type="checkbox" data-mix="stitch"><span>缝花</span></label><label><input type="checkbox" data-mix="cloud"><span>云雾</span></label></div><button type="button" id="clear-mix" disabled>仅保留主染法</button><p class="mix-limit" id="mix-limit" role="status">当前为单一染法。</p><p class="mix-model">组合染法会合并各染法的留白区域。花纹为二维视觉模拟，尚未用实物复合染色校准。</p></details>
             <div class="layer-editor" id="layer-editor" hidden><div class="layer-editor-buttons" role="group" aria-label="选择当前编辑的染法"><button type="button" data-edit-layer="circle">编辑圆花</button><button type="button" data-edit-layer="stripe">编辑条纹</button><button type="button" data-edit-layer="snowflake">编辑雪花</button><button type="button" data-edit-layer="clamp">编辑夹扎</button><button type="button" data-edit-layer="stitch">编辑缝花</button><button type="button" data-edit-layer="cloud">编辑云雾</button></div><p id="layer-edit-status" role="status"></p></div>
             <fieldset id="controls">
               <legend class="sr-only">调整当前扎染技法</legend>
