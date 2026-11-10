@@ -2,25 +2,25 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="application-version" content="1.0.3">
+  <meta name="application-version" content="1.0.4">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#183f63">
   <meta name="description" content="留一处白，让花生长。尝试圆花、条纹、雪花、夹扎、缝花与云雾，亲手留下自己的扎染纹样。">
   <title>结里生花 · 放肆染</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='8' fill='%23244f73'/%3E%3Ccircle cx='24' cy='24' r='13' fill='none' stroke='%23eeefe5' stroke-width='5'/%3E%3Ccircle cx='24' cy='24' r='5' fill='%23eeefe5'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=1.0.3">
-  <link rel="stylesheet" href="studio.css?v=1.0.3">
-  <link rel="stylesheet" href="scatter-studio.css?v=1.0.3">
-  <link rel="stylesheet" href="home.css?v=1.0.3">
-  <link rel="stylesheet" href="experience.css?v=1.0.3">
-  <script defer src="techniques.js?v=1.0.3"></script>
-  <script defer src="cover-art.js?v=1.0.3"></script>
-  <script defer src="experience-state.js?v=1.0.3"></script>
-  <script defer src="artwork.js?v=1.0.3"></script>
-  <script defer src="render-service.js?v=1.0.3"></script>
-  <script defer src="app.js?v=1.0.3"></script>
-  <script defer src="intro.js?v=1.0.3"></script>
-  <script defer src="scatter.js?v=1.0.3"></script>
+  <link rel="stylesheet" href="styles.css?v=1.0.4">
+  <link rel="stylesheet" href="studio.css?v=1.0.4">
+  <link rel="stylesheet" href="scatter-studio.css?v=1.0.4">
+  <link rel="stylesheet" href="home.css?v=1.0.4">
+  <link rel="stylesheet" href="experience.css?v=1.0.4">
+  <script defer src="techniques.js?v=1.0.4"></script>
+  <script defer src="cover-art.js?v=1.0.4"></script>
+  <script defer src="experience-state.js?v=1.0.4"></script>
+  <script defer src="artwork.js?v=1.0.4"></script>
+  <script defer src="render-service.js?v=1.0.4"></script>
+  <script defer src="app.js?v=1.0.4"></script>
+  <script defer src="intro.js?v=1.0.4"></script>
+  <script defer src="scatter.js?v=1.0.4"></script>
 </head>
 <body data-view="landing">
   <section class="landing" id="landing" aria-labelledby="landing-title">
@@ -63,7 +63,7 @@
         <details class="draft-menu"><summary>草稿与帮助</summary><div class="draft-menu-body"><span id="draft-status" role="status">草稿仅存本机</span><div class="draft-actions"><button type="button" id="export-draft">导出草稿</button><button type="button" id="import-draft">导入草稿</button><input type="file" id="draft-file" accept=".json,application/json" hidden><button type="button" id="tour-open">操作引导</button><button type="button" id="restart" title="恢复默认圆花，可撤销找回当前方案">全部重新开始</button></div><p class="storage-note">草稿和最近100步历史自动保存在此浏览器。清理网站数据前，可导出JSON备份当前布料。</p></div></details>
       </section>
       <section class="technique-picker" aria-labelledby="picker-title">
-        <div class="picker-heading"><h2 id="picker-title">选择染法 · 最多三种</h2><span>卡片选择染法 · 最多三种；组合请在工具区勾选。</span></div>
+        <div class="picker-heading"><h2 id="picker-title">选择染法 · 最多三种</h2><span>直接点击卡片多选，再次点击取消；最多三种。</span></div>
         <div class="technique-shelf" role="group" aria-label="选择一种或多种染法">
           <button type="button" class="technique-choice" data-technique="circle" aria-label="单独使用圆花" aria-pressed="true"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>圆花</strong><small>点击选择／取消</small></span></button>
           <button type="button" class="technique-choice" data-technique="stripe" aria-label="单独使用条纹" aria-pressed="false"><span class="swatch-frame"><canvas width="144" height="144" aria-hidden="true"></canvas><span class="swatch-check" aria-hidden="true">✓</span></span><span class="swatch-caption"><strong>条纹</strong><small>点击选择／取消</small></span></button>

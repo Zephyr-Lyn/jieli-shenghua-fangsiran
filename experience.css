@@ -56,6 +56,8 @@
 .first-dye button { flex-shrink: 0; }
 .scatter-studio .first-dye { width: calc(100% - var(--studio-tools) - 26px); box-sizing: border-box; }
 .dye-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 10px; }
+.scatter-studio .dip-group.select-control { display: block; }
+.scatter-studio .dip-group .dye-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; min-width: 0; }
 .tools .dye-options button { display: flex; align-items: center; justify-content: center; gap: 7px; font: inherit; font-size: 12px; padding: 9px 3px; min-height: 48px; color: #183f63; background: transparent; border: 1px solid #244f7350; cursor: pointer; }
 .tools .dye-options button[aria-pressed="true"] { border: 2px solid #183f63; background: #e2e9e8; font-weight: 700; }
 .dye-options small { display: block; font-size: 10px; font-weight: 400; margin-top: 3px; }
